@@ -1,0 +1,77 @@
+ANTONIO DENTAL TECH — Controle de Contas
+==================================
+
+O QUE É
+--------
+Um app para cadastrar produtos e clientes, lançar contas (fiado) e
+gerar uma nota com débito anterior, valor da compra e débito atual,
+com nome e endereço do cliente. Funciona 100% offline — os dados
+ficam salvos no próprio tablet.
+
+
+COMO INSTALAR NO TABLET (mais simples, sem internet)
+-------------------------------------------------------
+1. Copie a pasta inteira do app para o tablet (por cabo USB,
+   ou envie o .zip por e-mail/WhatsApp para você mesmo e extraia).
+2. No tablet, abra o arquivo "index.html" pelo navegador Chrome
+   (toque no arquivo > abrir com Chrome).
+3. No menu do Chrome (⋮, canto superior direito), toque em
+   "Adicionar à tela inicial". Isso cria um ícone do app.
+4. Pronto! Abrindo por esse ícone, o app abre em tela cheia, como
+   um aplicativo instalado, e funciona sem internet.
+
+Obs: dessa forma (arquivo local), o app funciona offline porque ele
+não depende de internet para nada — mas o ícone abre como uma aba
+do navegador, não 100% "sem barra do Chrome".
+
+
+COMO INSTALAR COMO APP DE VERDADE (tela cheia, sem barra do navegador)
+--------------------------------------------------------------------
+Para ficar com cara de app "de verdade" (sem barra de endereço),
+o Android exige que os arquivos sejam abertos via um servidor local
+(http://), não direto do arquivo. Duas opções fáceis e gratuitas:
+
+Opção A — App "Servidor HTTP Simples" (mais fácil):
+1. Baixe na Play Store um app tipo "HTTP Server" ou "Servidor Web Local".
+2. Coloque a pasta do app na pasta que esse app usa.
+3. Inicie o servidor, abra o endereço (geralmente http://localhost:8080)
+   no Chrome.
+4. Toque em "Adicionar à tela inicial" — agora vai abrir em tela
+   cheia, sem barra do navegador.
+
+Opção B — Hospedar de graça na internet (ex: Netlify, GitHub Pages,
+Vercel): suba os arquivos desta pasta lá, abra o link no tablet e
+adicione à tela inicial. Depois de instalado, o app continua
+funcionando offline (os dados ficam salvos no tablet).
+
+
+IMPORTANTE SOBRE OS DADOS
+---------------------------
+- Todos os dados (clientes, produtos, contas) ficam salvos DENTRO
+  do navegador daquele tablet (localStorage). Não há nuvem, não há
+  backup automático em segundo plano.
+- Se limpar os dados/cache do Chrome, ou desinstalar o app, as
+  informações são perdidas. Por isso, use a aba "Ajustes" > "Fazer
+  backup dos dados" regularmente e guarde o arquivo .json gerado em
+  um lugar seguro (e-mail, Drive, WhatsApp para você mesmo etc).
+  Para recuperar, use "Ajustes" > "Restaurar de um arquivo".
+- Use sempre o MESMO tablet e o MESMO navegador para não perder
+  o histórico.
+
+
+COMO USAR
+----------
+1. Aba "Produtos": cadastre os produtos que você vende (nome e preço).
+2. Aba "Clientes": cadastre o cliente (nome, endereço, telefone).
+3. Aba "Nova conta": escolha o cliente, toque em + para adicionar
+   os produtos da compra (ou digite um valor avulso), e toque em
+   "Gerar nota". A nota aparece na tela com débito anterior, valor
+   da compra e novo débito total.
+4. Na tela da nota, toque em "Imprimir / Salvar PDF" (abre a opção
+   de salvar como PDF do Android) ou "Compartilhar" (manda direto
+   por WhatsApp, se o aparelho suportar).
+5. Para registrar um pagamento do cliente (abatendo a dívida), abra
+   o cliente na lista ou vá em "Nova conta" > "Registrar pagamento".
+6. Na aba "Ajustes", faça backup dos dados sempre que puder — isso
+   gera um arquivo .json que você pode guardar e usar para restaurar
+   os dados caso o aparelho seja trocado ou o app seja reinstalado.
