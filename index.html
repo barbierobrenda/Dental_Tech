@@ -1,824 +1,1130 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Antonio Dental Tech — Controle de Contas</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#0F1412">
-<style>
-  :root{
-    --ink: #141414;
-    --ink-2: #000000;
-    --paper: #F6FAF9;
-    --paper-2: #E9F5F2;
-    --line: #DCE7E4;
-    --rust: #D6453B;
-    --sage: #0FA891;
-    --teal: #20DEC5;
-    --slate: #64726F;
-    --text: #17201E;
-    --serif: Georgia, 'Times New Roman', serif;
-    --mono: 'Courier New', ui-monospace, monospace;
-    --sans: -apple-system, 'Segoe UI', Roboto, system-ui, sans-serif;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;height:100%;}
-  body{
-    background:var(--paper);
-    color:var(--text);
-    font-family:var(--sans);
-    -webkit-tap-highlight-color:transparent;
-    overscroll-behavior:none;
-  }
-  #app{
-    display:flex;
-    flex-direction:column;
-    height:100vh;
-    max-width:720px;
-    margin:0 auto;
-    background:var(--paper);
-    position:relative;
-  }
-
-  /* HEADER */
-  header{
-    background:#fff;
-    color:var(--ink);
-    padding:14px 20px 12px;
-    flex-shrink:0;
-    border-bottom:3px solid transparent;
-    border-image:linear-gradient(90deg, var(--ink) 0%, var(--sage) 55%, var(--teal) 100%) 1;
-  }
-  header .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  header .brand img{
-    height:40px;
-    width:auto;
-    display:block;
-  }
-  header .brand small{
-    font-family:var(--sans);
-    font-size:11px;
-    color:var(--slate);
-    font-weight:600;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-  }
-  header .subline{
-    font-family:var(--mono);
-    font-size:12px;
-    color:var(--slate);
-    margin-top:2px;
-  }
-
-  /* MAIN */
-  main{
-    flex:1;
-    overflow-y:auto;
-    padding:16px 16px 90px;
-  }
-  .screen{display:none;}
-  .screen.active{display:block;}
-
-  h2.section-title{
-    font-family:var(--serif);
-    font-size:19px;
-    color:var(--ink);
-    margin:4px 0 14px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-  }
-
-  /* CARD (client / product row) */
-  .card{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:3px;
-    padding:14px 16px;
-    margin-bottom:10px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    cursor:pointer;
-  }
-  .card:active{background:var(--paper-2);}
-  .card .info{min-width:0;flex:1;}
-  .card .nome{font-weight:600;font-size:16px;color:var(--text);}
-  .card .sub{font-size:12.5px;color:var(--slate);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .card .valor{
-    font-family:var(--mono);
-    font-size:16px;
-    font-weight:700;
-    text-align:right;
-    flex-shrink:0;
-  }
-  .valor.devendo{color:var(--rust);}
-  .valor.quitado{color:var(--sage);}
-
-  .empty-state{
-    text-align:center;
-    padding:50px 20px;
-    color:var(--slate);
-  }
-  .empty-state .glyph{font-size:34px;margin-bottom:10px;opacity:.5;}
-  .empty-state p{font-family:var(--serif);font-size:15px;margin:0;}
-
-  /* FORM ELEMENTS */
-  label{
-    display:block;
-    font-size:11.5px;
-    text-transform:uppercase;
-    letter-spacing:0.6px;
-    color:var(--slate);
-    margin:14px 0 6px;
-  }
-  input, textarea, select{
-    width:100%;
-    padding:12px 13px;
-    border:1px solid var(--line);
-    border-radius:3px;
-    font-size:16px;
-    font-family:var(--sans);
-    background:#fff;
-    color:var(--text);
-  }
-  input:focus, textarea:focus, select:focus{
-    outline:none;
-    border-color:var(--ink);
-  }
-  textarea{resize:vertical;min-height:56px;}
-
-  .btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    padding:13px 18px;
-    border-radius:3px;
-    border:none;
-    font-size:15px;
-    font-weight:600;
-    font-family:var(--sans);
-    cursor:pointer;
-    width:100%;
-  }
-  .btn-primary{background:var(--ink); color:var(--paper);}
-  .btn-primary:active{background:var(--ink-2);}
-  .btn-rust{background:var(--rust); color:#fff;}
-  .btn-sage{background:var(--sage); color:#fff;}
-  .btn-ghost{background:transparent; color:var(--ink); border:1px solid var(--line);}
-  .btn-row{display:flex; gap:10px; margin-top:16px;}
-  .btn-row .btn{width:auto; flex:1;}
-
-  .fab{
-    position:absolute;
-    right:18px;
-    bottom:86px;
-    width:56px;height:56px;
-    border-radius:50%;
-    background:var(--rust);
-    color:#fff;
-    border:none;
-    font-size:28px;
-    line-height:1;
-    box-shadow:0 3px 10px rgba(0,0,0,.25);
-    cursor:pointer;
-    z-index:5;
-  }
-
-  /* BOTTOM NAV */
-  nav.tabbar{
-    display:flex;
-    border-top:1px solid var(--line);
-    background:#fff;
-    flex-shrink:0;
-    position:absolute;
-    bottom:0;left:0;right:0;
-    max-width:720px;
-    margin:0 auto;
-  }
-  nav.tabbar button{
-    flex:1;
-    background:none;
-    border:none;
-    padding:10px 4px 8px;
-    font-family:var(--sans);
-    font-size:11px;
-    color:var(--slate);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:3px;
-    cursor:pointer;
-  }
-  nav.tabbar button .ico{font-size:19px;}
-  nav.tabbar button.active{color:var(--ink); font-weight:700;}
-  nav.tabbar button.active .ico{transform:translateY(-1px);}
-
-  /* MODAL / SHEET */
-  .overlay{
-    position:fixed; inset:0;
-    background:rgba(10,14,13,0.5);
-    display:none;
-    align-items:flex-end;
-    justify-content:center;
-    z-index:50;
-  }
-  .overlay.show{display:flex;}
-  .sheet{
-    background:var(--paper);
-    width:100%;
-    max-width:720px;
-    max-height:88vh;
-    overflow-y:auto;
-    border-radius:14px 14px 0 0;
-    padding:22px 20px 28px;
-    animation:up .18s ease-out;
-  }
-  @keyframes up{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-  .sheet-title{
-    font-family:var(--serif);
-    font-size:20px;
-    color:var(--ink);
-    margin-bottom:4px;
-  }
-  .sheet-close{
-    position:absolute;
-    top:14px; right:14px;
-    background:var(--paper-2);
-    border:none;
-    width:32px;height:32px;
-    border-radius:50%;
-    font-size:16px;
-    color:var(--ink);
-    cursor:pointer;
-  }
-
-  /* NOVA CONTA - item picker */
-  .item-row{
-    display:flex; align-items:center; gap:10px;
-    padding:11px 0; border-bottom:1px solid var(--line);
-  }
-  .item-row .nome{flex:1; font-size:15px;}
-  .item-row .preco{font-family:var(--mono); font-size:13px; color:var(--slate); width:70px; text-align:right;}
-  .qty-ctrl{display:flex; align-items:center; gap:8px;}
-  .qty-ctrl button{
-    width:30px;height:30px; border-radius:50%;
-    border:1px solid var(--line); background:#fff;
-    font-size:16px; color:var(--ink); cursor:pointer;
-  }
-  .qty-ctrl span{min-width:18px; text-align:center; font-family:var(--mono); font-weight:700;}
-
-  .totals-box{
-    background:#fff; border:1px solid var(--line); border-radius:4px;
-    padding:14px 16px; margin-top:16px;
-  }
-  .totals-box .row{
-    display:flex; justify-content:space-between; font-size:14px; padding:5px 0;
-    font-family:var(--mono);
-  }
-  .totals-box .row.final{
-    border-top:1px dashed var(--line); margin-top:6px; padding-top:10px;
-    font-weight:700; font-size:16px;
-  }
-  .totals-box .row.final .val{color:var(--rust);}
-
-  /* NOTA (recibo) - elemento de assinatura */
-  .nota-wrap{
-    background:#fff;
-    border:1px solid var(--line);
-    padding:0;
-    margin:0 auto;
-    max-width:380px;
-    box-shadow:0 2px 14px rgba(10,14,13,0.14);
-  }
-  .nota-perf{
-    height:10px;
-    background:
-      linear-gradient(45deg, transparent 33%, var(--paper) 33%, var(--paper) 66%, transparent 66%),
-      linear-gradient(-45deg, transparent 33%, var(--paper) 33%, var(--paper) 66%, transparent 66%);
-    background-size:14px 20px;
-    background-position:0 -5px;
-  }
-  .nota{
-    padding:20px 22px 24px;
-    font-family:var(--mono);
-    font-size:13px;
-    color:var(--text);
-  }
-  .nota .brand-line{
-    text-align:center;
-    font-family:var(--serif);
-    font-size:18px;
-    color:var(--ink);
-    margin-bottom:2px;
-  }
-  .nota .tagline{text-align:center; font-size:10.5px; color:var(--slate); letter-spacing:1px; text-transform:uppercase;}
-  .nota hr{border:none; border-top:1px dashed var(--line); margin:12px 0;}
-  .nota .kv{display:flex; justify-content:space-between; margin:3px 0;}
-  .nota .kv .k{color:var(--slate);}
-  .nota .cliente-nome{font-size:15px; font-weight:700; margin-top:2px;}
-  .nota .cliente-end{color:var(--slate); font-size:12px; margin-top:2px;}
-  .nota table{width:100%; border-collapse:collapse; margin-top:8px;}
-  .nota td{padding:3px 0; font-size:12.5px; vertical-align:top;}
-  .nota td.qtd{width:28px;}
-  .nota td.val{text-align:right; white-space:nowrap;}
-  .nota .saldo-box{
-    margin-top:10px; padding:10px 12px;
-    background:var(--paper-2);
-    border:1px solid var(--line);
-  }
-  .nota .saldo-box .kv.grande{font-size:15px; font-weight:700; color:var(--rust);}
-  .nota .rodape{text-align:center; margin-top:16px; font-size:10.5px; color:var(--slate);}
-
-  .seg-ctrl{
-    display:flex; gap:8px; margin-bottom:16px;
-  }
-  .seg-btn{
-    flex:1;
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:3px;
-    padding:9px 6px;
-    font-family:var(--sans);
-    font-size:13px;
-    font-weight:600;
-    color:var(--slate);
-    cursor:pointer;
-  }
-  .seg-btn.active{
-    background:var(--ink);
-    color:var(--paper);
-    border-color:var(--ink);
-  }
-
-  #printArea{display:none;}
-  @media print{
-    body *{visibility:hidden;}
-    #printArea, #printArea *{visibility:visible;}
-    #printArea{display:block; position:absolute; top:0; left:0; width:100%;}
-
-    body.p09-print{
-      margin:0 !important;
-      padding:0 !important;
-      background:#fff !important;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Antonio Dental Tech — Controle de Contas</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="theme-color" content="#0F1412">
+  <style>
+    :root {
+      --ink: #141414;
+      --ink-2: #000000;
+      --paper: #F6FAF9;
+      --paper-2: #E9F5F2;
+      --line: #DCE7E4;
+      --rust: #D6453B;
+      --sage: #0FA891;
+      --teal: #20DEC5;
+      --slate: #64726F;
+      --text: #17201E;
+      --serif: Georgia, 'Times New Roman', serif;
+      --mono: 'Courier New', ui-monospace, monospace;
+      --sans: -apple-system, 'Segoe UI', Roboto, system-ui, sans-serif;
     }
-    body.p09-print #printArea{
-      width:48mm !important;
-      max-width:48mm !important;
-      margin:0 !important;
-      padding:0 !important;
+
+    * {
+      box-sizing: border-box;
     }
-    body.p09-print #printArea .nota-wrap{
-      width:48mm !important;
-      max-width:48mm !important;
-      margin:0 !important;
-      padding:0 !important;
-      border:none !important;
-      box-shadow:none !important;
-      background:#fff !important;
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
     }
-    body.p09-print #printArea .nota-perf{display:none !important;}
-    body.p09-print #printArea .nota{
-      width:48mm !important;
-      max-width:48mm !important;
-      padding:2mm 1.5mm 4mm !important;
-      font-family:'Courier New', monospace !important;
-      font-size:11pt !important;
-      line-height:1.25 !important;
-      color:#000 !important;
-      background:#fff !important;
+
+    body {
+      background: var(--paper);
+      color: var(--text);
+      font-family: var(--sans);
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none;
     }
-    body.p09-print #printArea .nota .brand-line{
-      font-family:'Courier New', monospace !important;
-      font-size:14pt !important;
-      font-weight:700 !important;
-      color:#000 !important;
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--paper);
+      position: relative;
     }
-    body.p09-print #printArea .nota .tagline,
-    body.p09-print #printArea .nota .cliente-end,
-    body.p09-print #printArea .nota .rodape,
-    body.p09-print #printArea .nota .kv .k{color:#000 !important;}
-    body.p09-print #printArea .nota .cliente-nome{font-size:12pt !important;}
-    body.p09-print #printArea .nota td{font-size:10.5pt !important;}
-    body.p09-print #printArea .nota hr{border-top:1px dashed #000 !important;}
-    body.p09-print #printArea .nota .saldo-box{
-      background:#fff !important;
-      border:1px solid #000 !important;
-      padding:2mm !important;
+
+    /* HEADER */
+    header {
+      background: #fff;
+      color: var(--ink);
+      padding: 14px 20px 12px;
+      flex-shrink: 0;
+      border-bottom: 3px solid transparent;
+      border-image: linear-gradient(90deg, var(--ink) 0%, var(--sage) 55%, var(--teal) 100%) 1;
     }
-    body.p09-print #printArea .nota .saldo-box .kv.grande{
-      color:#000 !important;
-      font-size:12pt !important;
+
+    header .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-  }
-  @page{margin:8mm;}
-  @page p09{size:58mm auto; margin:2mm 3mm;}
-</style>
+
+    header .brand img {
+      height: 40px;
+      width: auto;
+      display: block;
+    }
+
+    header .brand small {
+      font-family: var(--sans);
+      font-size: 11px;
+      color: var(--slate);
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    header .subline {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--slate);
+      margin-top: 2px;
+    }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 16px 90px;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    h2.section-title {
+      font-family: var(--serif);
+      font-size: 19px;
+      color: var(--ink);
+      margin: 4px 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* CARD (client / product row) */
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .card:active {
+      background: var(--paper-2);
+    }
+
+    .card .info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .card .nome {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .card .sub {
+      font-size: 12.5px;
+      color: var(--slate);
+      margin-top: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card .valor {
+      font-family: var(--mono);
+      font-size: 16px;
+      font-weight: 700;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .valor.devendo {
+      color: var(--rust);
+    }
+
+    .valor.quitado {
+      color: var(--sage);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--slate);
+    }
+
+    .empty-state .glyph {
+      font-size: 34px;
+      margin-bottom: 10px;
+      opacity: .5;
+    }
+
+    .empty-state p {
+      font-family: var(--serif);
+      font-size: 15px;
+      margin: 0;
+    }
+
+    /* FORM ELEMENTS */
+    label {
+      display: block;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--slate);
+      margin: 14px 0 6px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      font-size: 16px;
+      font-family: var(--sans);
+      background: #fff;
+      color: var(--text);
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 56px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 13px 18px;
+      border-radius: 3px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--sans);
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn-primary:active {
+      background: var(--ink-2);
+    }
+
+    .btn-rust {
+      background: var(--rust);
+      color: #fff;
+    }
+
+    .btn-sage {
+      background: var(--sage);
+      color: #fff;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn-row .btn {
+      width: auto;
+      flex: 1;
+    }
+
+    .fab {
+      position: absolute;
+      right: 18px;
+      bottom: 86px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--rust);
+      color: #fff;
+      border: none;
+      font-size: 28px;
+      line-height: 1;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, .25);
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    /* BOTTOM NAV */
+    nav.tabbar {
+      display: flex;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      flex-shrink: 0;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    nav.tabbar button {
+      flex: 1;
+      background: none;
+      border: none;
+      padding: 10px 4px 8px;
+      font-family: var(--sans);
+      font-size: 11px;
+      color: var(--slate);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+    }
+
+    nav.tabbar button .ico {
+      font-size: 19px;
+    }
+
+    nav.tabbar button.active {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    nav.tabbar button.active .ico {
+      transform: translateY(-1px);
+    }
+
+    /* MODAL / SHEET */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 14, 13, 0.5);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .overlay.show {
+      display: flex;
+    }
+
+    .sheet {
+      background: var(--paper);
+      width: 100%;
+      max-width: 720px;
+      max-height: 88vh;
+      overflow-y: auto;
+      border-radius: 14px 14px 0 0;
+      padding: 22px 20px 28px;
+      animation: up .18s ease-out;
+    }
+
+    @keyframes up {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .sheet-title {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .sheet-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: var(--paper-2);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    /* NOVA CONTA - item picker */
+    .item-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .item-row .nome {
+      flex: 1;
+      font-size: 15px;
+    }
+
+    .item-row .preco {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--slate);
+      width: 70px;
+      text-align: right;
+    }
+
+    .qty-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-ctrl button {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 16px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .qty-ctrl span {
+      min-width: 18px;
+      text-align: center;
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+
+    .totals-box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 14px 16px;
+      margin-top: 16px;
+    }
+
+    .totals-box .row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      padding: 5px 0;
+      font-family: var(--mono);
+    }
+
+    .totals-box .row.final {
+      border-top: 1px dashed var(--line);
+      margin-top: 6px;
+      padding-top: 10px;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .totals-box .row.final .val {
+      color: var(--rust);
+    }
+
+    /* NOTA (recibo) - elemento de assinatura */
+    .nota-wrap {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 0;
+      margin: 0 auto;
+      max-width: 380px;
+      box-shadow: 0 2px 14px rgba(10, 14, 13, 0.14);
+    }
+
+    .nota-perf {
+      height: 10px;
+      background:
+        linear-gradient(45deg, transparent 33%, var(--paper) 33%, var(--paper) 66%, transparent 66%),
+        linear-gradient(-45deg, transparent 33%, var(--paper) 33%, var(--paper) 66%, transparent 66%);
+      background-size: 14px 20px;
+      background-position: 0 -5px;
+    }
+
+    .nota {
+      padding: 20px 22px 24px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .nota .brand-line {
+      text-align: center;
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .nota .tagline {
+      text-align: center;
+      font-size: 10.5px;
+      color: var(--slate);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .nota hr {
+      border: none;
+      border-top: 1px dashed var(--line);
+      margin: 12px 0;
+    }
+
+    .nota .kv {
+      display: flex;
+      justify-content: space-between;
+      margin: 3px 0;
+    }
+
+    .nota .kv .k {
+      color: var(--slate);
+    }
+
+    .nota .cliente-nome {
+      font-size: 15px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .nota .cliente-end {
+      color: var(--slate);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .nota table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    .nota td {
+      padding: 3px 0;
+      font-size: 12.5px;
+      vertical-align: top;
+    }
+
+    .nota td.qtd {
+      width: 28px;
+    }
+
+    .nota td.val {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .nota .saldo-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+    }
+
+    .nota .saldo-box .kv.grande {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--rust);
+    }
+
+    .nota .rodape {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 10.5px;
+      color: var(--slate);
+    }
+
+    .seg-ctrl {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .seg-btn {
+      flex: 1;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      padding: 9px 6px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate);
+      cursor: pointer;
+    }
+
+    .seg-btn.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    #printArea {
+      display: none;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #printArea,
+      #printArea * {
+        visibility: visible;
+      }
+
+      #printArea {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+
+      body.p09-print {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+      }
+
+      body.p09-print #printArea {
+        width: 48mm !important;
+        max-width: 48mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      body.p09-print #printArea .nota-wrap {
+        width: 48mm !important;
+        max-width: 48mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: #fff !important;
+      }
+
+      body.p09-print #printArea .nota-perf {
+        display: none !important;
+      }
+
+      body.p09-print #printArea .nota {
+        width: 48mm !important;
+        max-width: 48mm !important;
+        padding: 2mm 1.5mm 4mm !important;
+        font-family: 'Courier New', monospace !important;
+        font-size: 11pt !important;
+        line-height: 1.25 !important;
+        color: #000 !important;
+        background: #fff !important;
+      }
+
+      body.p09-print #printArea .nota .brand-line {
+        font-family: 'Courier New', monospace !important;
+        font-size: 14pt !important;
+        font-weight: 700 !important;
+        color: #000 !important;
+      }
+
+      body.p09-print #printArea .nota .tagline,
+      body.p09-print #printArea .nota .cliente-end,
+      body.p09-print #printArea .nota .rodape,
+      body.p09-print #printArea .nota .kv .k {
+        color: #000 !important;
+      }
+
+      body.p09-print #printArea .nota .cliente-nome {
+        font-size: 12pt !important;
+      }
+
+      body.p09-print #printArea .nota td {
+        font-size: 10.5pt !important;
+      }
+
+      body.p09-print #printArea .nota hr {
+        border-top: 1px dashed #000 !important;
+      }
+
+      body.p09-print #printArea .nota .saldo-box {
+        background: #fff !important;
+        border: 1px solid #000 !important;
+        padding: 2mm !important;
+      }
+
+      body.p09-print #printArea .nota .saldo-box .kv.grande {
+        color: #000 !important;
+        font-size: 12pt !important;
+      }
+    }
+
+    @page {
+      margin: 8mm;
+    }
+
+    @page p09 {
+      size: 58mm auto;
+      margin: 2mm 3mm;
+    }
+  </style>
 </head>
+
 <body>
-<div id="app">
+  <div id="app">
 
-  <header>
-    <div class="brand">
-      <img src="logo.png" alt="Antonio Dental Tech">
-      <small>Caderno Digital</small>
-    </div>
-    <div class="subline" id="headerDate"></div>
-  </header>
-
-  <main>
-
-    <!-- INÍCIO / BALANÇO -->
-    <section class="screen active" id="screen-inicio">
-      <h2 class="section-title">Balanço</h2>
-
-      <div class="totals-box" style="margin-top:0;">
-        <div class="row"><span>Total a receber</span><span class="val" id="iniASReceber" style="color:var(--rust); font-weight:700;">R$ 0,00</span></div>
-        <div class="row"><span>Total recebido</span><span class="val" id="iniRecebido" style="color:var(--sage); font-weight:700;">R$ 0,00</span></div>
-        <div class="row final"><span>Faturamento total</span><span class="val" id="iniFaturado">R$ 0,00</span></div>
+    <header>
+      <div class="brand">
+        <img src="logo.png" alt="Antonio Dental Tech">
+        <small>Caderno Digital</small>
       </div>
+      <div class="subline" id="headerDate"></div>
+    </header>
 
-      <div style="display:flex; gap:10px; margin-top:12px;">
-        <div class="totals-box" style="flex:1; margin-top:0; text-align:center;">
-          <div style="font-size:26px; font-weight:700; color:var(--ink);" id="iniQtdClientes">0</div>
-          <div style="font-size:11.5px; color:var(--slate); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px;">Clientes</div>
-        </div>
-        <div class="totals-box" style="flex:1; margin-top:0; text-align:center;">
-          <div style="font-size:26px; font-weight:700; color:var(--rust);" id="iniQtdDevendo">0</div>
-          <div style="font-size:11.5px; color:var(--slate); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px;">Devendo</div>
-        </div>
-        <div class="totals-box" style="flex:1; margin-top:0; text-align:center;">
-          <div style="font-size:26px; font-weight:700; color:var(--sage);" id="iniQtdQuitados">0</div>
-          <div style="font-size:11.5px; color:var(--slate); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px;">Quitados</div>
-        </div>
-      </div>
+    <main>
 
-      <h2 class="section-title" style="margin-top:22px;">Maiores devedores</h2>
-      <div id="iniMaioresDevedores"></div>
-    </section>
+      <!-- INÍCIO / BALANÇO -->
+      <section class="screen active" id="screen-inicio">
+        <h2 class="section-title">Balanço</h2>
 
-    <!-- CLIENTES -->
-    <section class="screen" id="screen-clientes">
-      <h2 class="section-title">Clientes</h2>
-      <div id="listaClientes"></div>
-    </section>
-
-    <!-- PRODUTOS -->
-    <section class="screen" id="screen-produtos">
-      <h2 class="section-title">Produtos</h2>
-      <div id="listaProdutos"></div>
-    </section>
-
-    <!-- NOVA CONTA -->
-    <section class="screen" id="screen-conta">
-      <h2 class="section-title">Nova conta</h2>
-
-      <label>Cliente</label>
-      <select id="selCliente"></select>
-
-      <div id="semClienteAviso" class="empty-state" style="display:none;">
-        <div class="glyph">＋</div>
-        <p>Cadastre um cliente antes de lançar uma conta.</p>
-      </div>
-
-      <div id="contaCorpo" style="display:none;">
-        <label style="margin-top:20px;">Itens (toque para adicionar)</label>
-        <div id="listaItensConta"></div>
-
-        <label>Ou valor avulso (opcional)</label>
-        <input type="number" id="valorAvulso" placeholder="0,00" inputmode="decimal" step="0.01">
-        <input type="text" id="descAvulso" placeholder="Descrição (ex: frete, serviço...)" style="margin-top:8px;">
-
-        <div class="totals-box">
-          <div class="row"><span>Débito anterior</span><span id="tSaldoAnterior">R$ 0,00</span></div>
-          <div class="row"><span>Valor desta conta</span><span id="tValorConta">R$ 0,00</span></div>
-          <div class="row final"><span>Débito atual</span><span class="val" id="tSaldoAtual">R$ 0,00</span></div>
+        <div class="totals-box" style="margin-top:0;">
+          <div class="row"><span>Total a receber</span><span class="val" id="iniASReceber"
+              style="color:var(--rust); font-weight:700;">R$ 0,00</span></div>
+          <div class="row"><span>Total recebido</span><span class="val" id="iniRecebido"
+              style="color:var(--sage); font-weight:700;">R$ 0,00</span></div>
+          <div class="row final"><span>Faturamento total</span><span class="val" id="iniFaturado">R$ 0,00</span></div>
         </div>
 
-        <div class="btn-row">
-          <button class="btn btn-ghost" onclick="abrirRegistrarPagamento()">Registrar pagamento</button>
-          <button class="btn btn-rust" onclick="gerarNota()">Gerar nota</button>
+        <div style="display:flex; gap:10px; margin-top:12px;">
+          <div class="totals-box" style="flex:1; margin-top:0; text-align:center;">
+            <div style="font-size:26px; font-weight:700; color:var(--ink);" id="iniQtdClientes">0</div>
+            <div
+              style="font-size:11.5px; color:var(--slate); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px;">
+              Clientes</div>
+          </div>
+          <div class="totals-box" style="flex:1; margin-top:0; text-align:center;">
+            <div style="font-size:26px; font-weight:700; color:var(--rust);" id="iniQtdDevendo">0</div>
+            <div
+              style="font-size:11.5px; color:var(--slate); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px;">
+              Devendo</div>
+          </div>
+          <div class="totals-box" style="flex:1; margin-top:0; text-align:center;">
+            <div style="font-size:26px; font-weight:700; color:var(--sage);" id="iniQtdQuitados">0</div>
+            <div
+              style="font-size:11.5px; color:var(--slate); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px;">
+              Quitados</div>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <!-- HISTÓRICO (NOTAS + PAGAMENTOS) -->
-    <section class="screen" id="screen-notas">
-      <h2 class="section-title">Histórico</h2>
-      <div class="seg-ctrl">
-        <button class="seg-btn active" id="segNotas" onclick="trocarHistorico('notas')">Notas</button>
-        <button class="seg-btn" id="segPagamentos" onclick="trocarHistorico('pagamentos')">Pagamentos</button>
-      </div>
-      <div id="histNotasView">
-        <div id="listaNotas"></div>
-      </div>
-      <div id="histPagamentosView" style="display:none;">
-        <div class="totals-box" id="pagamentosResumo" style="margin-bottom:14px;"></div>
-        <div id="listaPagamentos"></div>
-      </div>
-    </section>
+        <h2 class="section-title" style="margin-top:22px;">Maiores devedores</h2>
+        <div id="iniMaioresDevedores"></div>
+      </section>
 
-    <!-- AJUSTES / BACKUP -->
-    <section class="screen" id="screen-ajustes">
-      <h2 class="section-title">Ajustes</h2>
+      <!-- CLIENTES -->
+      <section class="screen" id="screen-clientes">
+        <h2 class="section-title">Clientes</h2>
+        <div id="listaClientes"></div>
+      </section>
 
-      <div class="totals-box" style="margin-top:0;">
-        <div style="font-family:var(--serif); font-size:15.5px; color:var(--ink); margin-bottom:6px;">Backup dos dados</div>
-        <div style="font-size:13px; color:var(--slate); line-height:1.5;">
-          Os dados ficam salvos só neste aparelho. Faça backup regularmente
-          e guarde o arquivo num lugar seguro (e-mail, Drive, WhatsApp).
+      <!-- PRODUTOS -->
+      <section class="screen" id="screen-produtos">
+        <h2 class="section-title">Produtos</h2>
+        <div id="listaProdutos"></div>
+      </section>
+
+      <!-- NOVA CONTA -->
+      <section class="screen" id="screen-conta">
+        <h2 class="section-title">Nova conta</h2>
+
+        <label>Cliente</label>
+        <select id="selCliente"></select>
+
+        <div id="semClienteAviso" class="empty-state" style="display:none;">
+          <div class="glyph">＋</div>
+          <p>Cadastre um cliente antes de lançar uma conta.</p>
         </div>
+
+        <div id="contaCorpo" style="display:none;">
+          <label style="margin-top:20px;">Itens (toque para adicionar)</label>
+          <div id="listaItensConta"></div>
+
+          <label>Ou valor avulso (opcional)</label>
+          <input type="number" id="valorAvulso" placeholder="0,00" inputmode="decimal" step="0.01">
+          <input type="text" id="descAvulso" placeholder="Descrição (ex: frete, serviço...)" style="margin-top:8px;">
+
+          <div class="totals-box">
+            <div class="row"><span>Débito anterior</span><span id="tSaldoAnterior">R$ 0,00</span></div>
+            <div class="row"><span>Valor desta conta</span><span id="tValorConta">R$ 0,00</span></div>
+            <div class="row final"><span>Débito atual</span><span class="val" id="tSaldoAtual">R$ 0,00</span></div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-ghost" onclick="abrirRegistrarPagamento()">Registrar pagamento</button>
+            <button class="btn btn-rust" onclick="gerarNota()">Gerar nota</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- HISTÓRICO (NOTAS + PAGAMENTOS) -->
+      <section class="screen" id="screen-notas">
+        <h2 class="section-title">Histórico</h2>
+        <div class="seg-ctrl">
+          <button class="seg-btn active" id="segNotas" onclick="trocarHistorico('notas')">Notas</button>
+          <button class="seg-btn" id="segPagamentos" onclick="trocarHistorico('pagamentos')">Pagamentos</button>
+        </div>
+        <div id="histNotasView">
+          <div id="listaNotas"></div>
+        </div>
+        <div id="histPagamentosView" style="display:none;">
+          <div class="totals-box" id="pagamentosResumo" style="margin-bottom:14px;"></div>
+          <div id="listaPagamentos"></div>
+        </div>
+      </section>
+
+      <!-- AJUSTES / BACKUP -->
+      <section class="screen" id="screen-ajustes">
+        <h2 class="section-title">Ajustes</h2>
+
+        <div class="totals-box" style="margin-top:0;">
+          <div style="font-family:var(--serif); font-size:15.5px; color:var(--ink); margin-bottom:6px;">Backup dos dados
+          </div>
+          <div style="font-size:13px; color:var(--slate); line-height:1.5;">
+            Os dados ficam salvos só neste aparelho. Faça backup regularmente
+            e guarde o arquivo num lugar seguro (e-mail, Drive, WhatsApp).
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top:16px;" onclick="fazerBackup()">⬇ Fazer backup dos
+          dados</button>
+
+        <label style="margin-top:22px;">Restaurar backup</label>
+        <div style="font-size:12.5px; color:var(--slate); margin-bottom:8px;">
+          Substitui os dados atuais deste aparelho pelos do arquivo escolhido.
+        </div>
+        <input type="file" id="inputRestaurar" accept="application/json" style="display:none;"
+          onchange="restaurarBackup(event)">
+        <button class="btn btn-ghost" onclick="document.getElementById('inputRestaurar').click()">⬆ Restaurar de um
+          arquivo</button>
+
+        <div id="backupInfo" style="font-family:var(--mono); font-size:12px; color:var(--slate); margin-top:14px;">
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="tabbar">
+      <button class="tab-btn active" data-tab="inicio" onclick="trocarTab('inicio')">
+        <span class="ico">🏠</span>Início
+      </button>
+      <button class="tab-btn" data-tab="clientes" onclick="trocarTab('clientes')">
+        <span class="ico">👤</span>Clientes
+      </button>
+      <button class="tab-btn" data-tab="produtos" onclick="trocarTab('produtos')">
+        <span class="ico">📦</span>Produtos
+      </button>
+      <button class="tab-btn" data-tab="conta" onclick="trocarTab('conta')">
+        <span class="ico">🧾</span>Nova conta
+      </button>
+      <button class="tab-btn" data-tab="notas" onclick="trocarTab('notas')">
+        <span class="ico">📋</span>Histórico
+      </button>
+      <button class="tab-btn" data-tab="ajustes" onclick="trocarTab('ajustes')">
+        <span class="ico">⚙️</span>Ajustes
+      </button>
+    </nav>
+
+    <button class="fab" id="fabAdd" onclick="fabClick()">+</button>
+  </div>
+
+  <!-- OVERLAY: form cliente -->
+  <div class="overlay" id="ovCliente">
+    <div class="sheet">
+      <button class="sheet-close" onclick="fecharOverlay('ovCliente')">✕</button>
+      <div class="sheet-title" id="tituloFormCliente">Novo cliente</div>
+      <input type="hidden" id="clienteId">
+      <label>Nome</label>
+      <input type="text" id="clienteNome" placeholder="Nome completo">
+      <label>Endereço</label>
+      <textarea id="clienteEndereco" placeholder="Rua, número, bairro..."></textarea>
+      <label>Telefone (opcional)</label>
+      <input type="text" id="clienteTelefone" placeholder="(00) 00000-0000">
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="btnExcluirCliente" style="display:none;"
+          onclick="excluirClienteAtual()">Excluir</button>
+        <button class="btn btn-primary" onclick="salvarCliente()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY: detalhe cliente / historico -->
+  <div class="overlay" id="ovDetalheCliente">
+    <div class="sheet">
+      <button class="sheet-close" onclick="fecharOverlay('ovDetalheCliente')">✕</button>
+      <div class="sheet-title" id="detNome">Cliente</div>
+      <div class="nota .cliente-end" id="detEndereco" style="color:var(--slate); font-size:13px; margin-bottom:14px;">
+      </div>
+      <div class="totals-box">
+        <div class="row"><span>Total recebido</span><span id="detTotalRecebido"
+            style="color:var(--sage); font-weight:700;">R$ 0,00</span></div>
+        <div class="row final"><span>Total devedor</span><span class="val" id="detSaldo">R$ 0,00</span></div>
+      </div>
+      <label>Histórico</label>
+      <div id="detHistorico"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="editarClienteAtual()">Editar cadastro</button>
+        <button class="btn btn-primary" onclick="lancarContaParaClienteAtual()">Lançar conta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY: form produto -->
+  <div class="overlay" id="ovProduto">
+    <div class="sheet">
+      <button class="sheet-close" onclick="fecharOverlay('ovProduto')">✕</button>
+      <div class="sheet-title" id="tituloFormProduto">Novo produto</div>
+      <input type="hidden" id="produtoId">
+      <label>Nome do produto</label>
+      <input type="text" id="produtoNome" placeholder="Ex: Arroz 5kg">
+      <label>Preço (R$)</label>
+      <input type="number" id="produtoPreco" placeholder="0,00" inputmode="decimal" step="0.01">
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="btnExcluirProduto" style="display:none;"
+          onclick="excluirProdutoAtual()">Excluir</button>
+        <button class="btn btn-primary" onclick="salvarProduto()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY: pagamento -->
+  <div class="overlay" id="ovPagamento">
+    <div class="sheet">
+      <button class="sheet-close" onclick="fecharOverlay('ovPagamento')">✕</button>
+      <div class="sheet-title">Registrar pagamento</div>
+      <div style="color:var(--slate); font-size:13px; margin-bottom:6px;" id="pagCliente"></div>
+      <label>Valor pago (R$)</label>
+      <input type="number" id="pagValor" placeholder="0,00" inputmode="decimal" step="0.01">
+      <div class="btn-row">
+        <button class="btn btn-sage" onclick="confirmarPagamento()">Confirmar pagamento</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY: NOTA gerada -->
+  <div class="overlay" id="ovNota">
+    <div class="sheet" style="background:var(--paper-2);">
+      <button class="sheet-close" onclick="fecharOverlay('ovNota')">✕</button>
+      <div class="nota-wrap" id="notaConteudo"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="compartilharNota()">Compartilhar</button>
+        <button class="btn btn-primary" onclick="imprimirNotaA4()">Imprimir / PDF</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-rust" onclick="imprimirNotaP09()">🧾 Imprimir na P09</button>
+      </div>
+      <div class="btn-row" id="notaAcoesSalvas">
+        <button class="btn btn-ghost" onclick="editarNotaAtual()">Editar nota</button>
+        <button class="btn btn-ghost" style="color:var(--rust);" onclick="excluirNotaAtual()">Excluir nota</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY: EDITAR NOTA -->
+  <div class="overlay" id="ovEditarNota">
+    <div class="sheet">
+      <button class="sheet-close" onclick="fecharOverlay('ovEditarNota')">✕</button>
+      <div class="sheet-title">Editar nota</div>
+      <div style="color:var(--slate); font-size:13px; margin-bottom:6px;" id="editNotaCliente"></div>
+      <input type="hidden" id="editNotaId">
+
+      <label>Itens (toque para ajustar)</label>
+      <div id="listaItensEdicao"></div>
+
+      <label>Ou valor avulso (opcional)</label>
+      <input type="number" id="editValorAvulso" placeholder="0,00" inputmode="decimal" step="0.01">
+      <input type="text" id="editDescAvulso" placeholder="Descrição (ex: frete, serviço...)" style="margin-top:8px;">
+
+      <div class="totals-box">
+        <div class="row final"><span>Novo valor da nota</span><span class="val" id="editValorTotal">R$ 0,00</span></div>
       </div>
 
-      <button class="btn btn-primary" style="margin-top:16px;" onclick="fazerBackup()">⬇ Fazer backup dos dados</button>
-
-      <label style="margin-top:22px;">Restaurar backup</label>
-      <div style="font-size:12.5px; color:var(--slate); margin-bottom:8px;">
-        Substitui os dados atuais deste aparelho pelos do arquivo escolhido.
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="salvarEdicaoNota()">Salvar alterações</button>
       </div>
-      <input type="file" id="inputRestaurar" accept="application/json" style="display:none;" onchange="restaurarBackup(event)">
-      <button class="btn btn-ghost" onclick="document.getElementById('inputRestaurar').click()">⬆ Restaurar de um arquivo</button>
-
-      <div id="backupInfo" style="font-family:var(--mono); font-size:12px; color:var(--slate); margin-top:14px;"></div>
-    </section>
-
-  </main>
-
-  <nav class="tabbar">
-    <button class="tab-btn active" data-tab="inicio" onclick="trocarTab('inicio')">
-      <span class="ico">🏠</span>Início
-    </button>
-    <button class="tab-btn" data-tab="clientes" onclick="trocarTab('clientes')">
-      <span class="ico">👤</span>Clientes
-    </button>
-    <button class="tab-btn" data-tab="produtos" onclick="trocarTab('produtos')">
-      <span class="ico">📦</span>Produtos
-    </button>
-    <button class="tab-btn" data-tab="conta" onclick="trocarTab('conta')">
-      <span class="ico">🧾</span>Nova conta
-    </button>
-    <button class="tab-btn" data-tab="notas" onclick="trocarTab('notas')">
-      <span class="ico">📋</span>Histórico
-    </button>
-    <button class="tab-btn" data-tab="ajustes" onclick="trocarTab('ajustes')">
-      <span class="ico">⚙️</span>Ajustes
-    </button>
-  </nav>
-
-  <button class="fab" id="fabAdd" onclick="fabClick()">+</button>
-</div>
-
-<!-- OVERLAY: form cliente -->
-<div class="overlay" id="ovCliente">
-  <div class="sheet">
-    <button class="sheet-close" onclick="fecharOverlay('ovCliente')">✕</button>
-    <div class="sheet-title" id="tituloFormCliente">Novo cliente</div>
-    <input type="hidden" id="clienteId">
-    <label>Nome</label>
-    <input type="text" id="clienteNome" placeholder="Nome completo">
-    <label>Endereço</label>
-    <textarea id="clienteEndereco" placeholder="Rua, número, bairro..."></textarea>
-    <label>Telefone (opcional)</label>
-    <input type="text" id="clienteTelefone" placeholder="(00) 00000-0000">
-    <div class="btn-row">
-      <button class="btn btn-ghost" id="btnExcluirCliente" style="display:none;" onclick="excluirClienteAtual()">Excluir</button>
-      <button class="btn btn-primary" onclick="salvarCliente()">Salvar</button>
     </div>
   </div>
-</div>
 
-<!-- OVERLAY: detalhe cliente / historico -->
-<div class="overlay" id="ovDetalheCliente">
-  <div class="sheet">
-    <button class="sheet-close" onclick="fecharOverlay('ovDetalheCliente')">✕</button>
-    <div class="sheet-title" id="detNome">Cliente</div>
-    <div class="nota .cliente-end" id="detEndereco" style="color:var(--slate); font-size:13px; margin-bottom:14px;"></div>
-    <div class="totals-box">
-      <div class="row"><span>Total recebido</span><span id="detTotalRecebido" style="color:var(--sage); font-weight:700;">R$ 0,00</span></div>
-      <div class="row final"><span>Total devedor</span><span class="val" id="detSaldo">R$ 0,00</span></div>
-    </div>
-    <label>Histórico</label>
-    <div id="detHistorico"></div>
-    <div class="btn-row">
-      <button class="btn btn-ghost" onclick="editarClienteAtual()">Editar cadastro</button>
-      <button class="btn btn-primary" onclick="lancarContaParaClienteAtual()">Lançar conta</button>
-    </div>
-  </div>
-</div>
+  <div id="printArea"></div>
 
-<!-- OVERLAY: form produto -->
-<div class="overlay" id="ovProduto">
-  <div class="sheet">
-    <button class="sheet-close" onclick="fecharOverlay('ovProduto')">✕</button>
-    <div class="sheet-title" id="tituloFormProduto">Novo produto</div>
-    <input type="hidden" id="produtoId">
-    <label>Nome do produto</label>
-    <input type="text" id="produtoNome" placeholder="Ex: Arroz 5kg">
-    <label>Preço (R$)</label>
-    <input type="number" id="produtoPreco" placeholder="0,00" inputmode="decimal" step="0.01">
-    <div class="btn-row">
-      <button class="btn btn-ghost" id="btnExcluirProduto" style="display:none;" onclick="excluirProdutoAtual()">Excluir</button>
-      <button class="btn btn-primary" onclick="salvarProduto()">Salvar</button>
-    </div>
-  </div>
-</div>
+  <script>
+    /* ==================== DADOS (localStorage) ==================== */
+    const DB = {
+      clientes: JSON.parse(localStorage.getItem('fc_clientes') || '[]'),
+      produtos: JSON.parse(localStorage.getItem('fc_produtos') || '[]'),
+      lancamentos: JSON.parse(localStorage.getItem('fc_lancamentos') || '[]'),
+    };
+    function salvar() {
+      localStorage.setItem('fc_clientes', JSON.stringify(DB.clientes));
+      localStorage.setItem('fc_produtos', JSON.stringify(DB.produtos));
+      localStorage.setItem('fc_lancamentos', JSON.stringify(DB.lancamentos));
+    }
+    function uid() {return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);}
+    function fmt(v) {return 'R$ ' + (Math.round(v * 100) / 100).toFixed(2).replace('.', ',');}
+    function hojeStr() {
+      const d = new Date();
+      return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'});
+    }
+    document.getElementById('headerDate').textContent = new Date().toLocaleDateString('pt-BR', {weekday: 'long', day: '2-digit', month: 'long'});
 
-<!-- OVERLAY: pagamento -->
-<div class="overlay" id="ovPagamento">
-  <div class="sheet">
-    <button class="sheet-close" onclick="fecharOverlay('ovPagamento')">✕</button>
-    <div class="sheet-title">Registrar pagamento</div>
-    <div style="color:var(--slate); font-size:13px; margin-bottom:6px;" id="pagCliente"></div>
-    <label>Valor pago (R$)</label>
-    <input type="number" id="pagValor" placeholder="0,00" inputmode="decimal" step="0.01">
-    <div class="btn-row">
-      <button class="btn btn-sage" onclick="confirmarPagamento()">Confirmar pagamento</button>
-    </div>
-  </div>
-</div>
+    function saldoCliente(clienteId) {
+      return DB.lancamentos
+        .filter(l => l.clienteId === clienteId)
+        .reduce((s, l) => s + l.valor, 0);
+    }
 
-<!-- OVERLAY: NOTA gerada -->
-<div class="overlay" id="ovNota">
-  <div class="sheet" style="background:var(--paper-2);">
-    <button class="sheet-close" onclick="fecharOverlay('ovNota')">✕</button>
-    <div class="nota-wrap" id="notaConteudo"></div>
-    <div class="btn-row">
-      <button class="btn btn-ghost" onclick="compartilharNota()">Compartilhar</button>
-      <button class="btn btn-primary" onclick="imprimirNotaA4()">Imprimir / PDF</button>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-rust" onclick="imprimirNotaP09()">🧾 Imprimir na P09</button>
-    </div>
-    <div class="btn-row" id="notaAcoesSalvas">
-      <button class="btn btn-ghost" onclick="editarNotaAtual()">Editar nota</button>
-      <button class="btn btn-ghost" style="color:var(--rust);" onclick="excluirNotaAtual()">Excluir nota</button>
-    </div>
-  </div>
-</div>
+    /* ==================== NAV / TABS ==================== */
+    let contaItensSelecionados = {}; // produtoId -> qtd
+    let clienteDetalheAtualId = null;
+    let subHistoricoAtual = 'notas'; // 'notas' | 'pagamentos'
 
-<!-- OVERLAY: EDITAR NOTA -->
-<div class="overlay" id="ovEditarNota">
-  <div class="sheet">
-    <button class="sheet-close" onclick="fecharOverlay('ovEditarNota')">✕</button>
-    <div class="sheet-title">Editar nota</div>
-    <div style="color:var(--slate); font-size:13px; margin-bottom:6px;" id="editNotaCliente"></div>
-    <input type="hidden" id="editNotaId">
+    function trocarTab(nome) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + nome).classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.tab-btn[data-tab="' + nome + '"]').classList.add('active');
+      document.getElementById('fabAdd').style.display = (nome === 'conta' || nome === 'notas' || nome === 'ajustes' || nome === 'inicio') ? 'none' : 'flex';
+      if (nome === 'inicio') renderInicio();
+      if (nome === 'clientes') renderClientes();
+      if (nome === 'produtos') renderProdutos();
+      if (nome === 'conta') renderContaScreen();
+      if (nome === 'notas') trocarHistorico(subHistoricoAtual);
+      if (nome === 'ajustes') mostrarInfoBackup();
+    }
+    function trocarHistorico(qual) {
+      subHistoricoAtual = qual;
+      document.getElementById('segNotas').classList.toggle('active', qual === 'notas');
+      document.getElementById('segPagamentos').classList.toggle('active', qual === 'pagamentos');
+      document.getElementById('histNotasView').style.display = qual === 'notas' ? 'block' : 'none';
+      document.getElementById('histPagamentosView').style.display = qual === 'pagamentos' ? 'block' : 'none';
+      if (qual === 'notas') renderNotas();
+      else renderPagamentos();
+    }
+    function fabClick() {
+      const ativa = document.querySelector('.tab-btn.active').dataset.tab;
+      if (ativa === 'clientes') abrirNovoCliente();
+      if (ativa === 'produtos') abrirNovoProduto();
+    }
+    function fecharOverlay(id) {document.getElementById(id).classList.remove('show');}
+    function abrirOverlay(id) {document.getElementById(id).classList.add('show');}
 
-    <label>Itens (toque para ajustar)</label>
-    <div id="listaItensEdicao"></div>
+    /* Esc fecha a janela/tela (overlay) que estiver aberta */
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        document.querySelectorAll('.overlay.show').forEach(o => o.classList.remove('show'));
+      }
+    });
+    /* Tocar fora da janela (no fundo escurecido) também fecha */
+    document.querySelectorAll('.overlay').forEach(function (ov) {
+      ov.addEventListener('click', function (e) {
+        if (e.target === ov) ov.classList.remove('show');
+      });
+    });
 
-    <label>Ou valor avulso (opcional)</label>
-    <input type="number" id="editValorAvulso" placeholder="0,00" inputmode="decimal" step="0.01">
-    <input type="text" id="editDescAvulso" placeholder="Descrição (ex: frete, serviço...)" style="margin-top:8px;">
+    /* ==================== CLIENTES ==================== */
+    function totalRecebidoCliente(clienteId) {
+      return DB.lancamentos
+        .filter(l => l.clienteId === clienteId && l.valor < 0)
+        .reduce((s, l) => s + Math.abs(l.valor), 0);
+    }
 
-    <div class="totals-box">
-      <div class="row final"><span>Novo valor da nota</span><span class="val" id="editValorTotal">R$ 0,00</span></div>
-    </div>
+    function renderInicio() {
+      const totalAReceber = DB.clientes.reduce((s, c) => s + Math.max(0, saldoCliente(c.id)), 0);
+      const totalRecebido = DB.lancamentos.filter(l => l.valor < 0).reduce((s, l) => s + Math.abs(l.valor), 0);
+      const totalFaturado = DB.lancamentos.filter(l => l.valor > 0).reduce((s, l) => s + l.valor, 0);
+      document.getElementById('iniASReceber').textContent = fmt(totalAReceber);
+      document.getElementById('iniRecebido').textContent = fmt(totalRecebido);
+      document.getElementById('iniFaturado').textContent = fmt(totalFaturado);
 
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="salvarEdicaoNota()">Salvar alterações</button>
-    </div>
-  </div>
-</div>
+      const devendo = DB.clientes.filter(c => saldoCliente(c.id) > 0.004);
+      const quitados = DB.clientes.length - devendo.length;
+      document.getElementById('iniQtdClientes').textContent = DB.clientes.length;
+      document.getElementById('iniQtdDevendo').textContent = devendo.length;
+      document.getElementById('iniQtdQuitados').textContent = quitados;
 
-<div id="printArea"></div>
-
-<script>
-/* ==================== DADOS (localStorage) ==================== */
-const DB = {
-  clientes: JSON.parse(localStorage.getItem('fc_clientes') || '[]'),
-  produtos: JSON.parse(localStorage.getItem('fc_produtos') || '[]'),
-  lancamentos: JSON.parse(localStorage.getItem('fc_lancamentos') || '[]'),
-};
-function salvar(){
-  localStorage.setItem('fc_clientes', JSON.stringify(DB.clientes));
-  localStorage.setItem('fc_produtos', JSON.stringify(DB.produtos));
-  localStorage.setItem('fc_lancamentos', JSON.stringify(DB.lancamentos));
-}
-function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
-function fmt(v){ return 'R$ ' + (Math.round(v*100)/100).toFixed(2).replace('.',','); }
-function hojeStr(){
-  const d = new Date();
-  return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-}
-document.getElementById('headerDate').textContent = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'2-digit', month:'long'});
-
-function saldoCliente(clienteId){
-  return DB.lancamentos
-    .filter(l => l.clienteId === clienteId)
-    .reduce((s,l)=> s + l.valor, 0);
-}
-
-/* ==================== NAV / TABS ==================== */
-let contaItensSelecionados = {}; // produtoId -> qtd
-let clienteDetalheAtualId = null;
-let subHistoricoAtual = 'notas'; // 'notas' | 'pagamentos'
-
-function trocarTab(nome){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+nome).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelector('.tab-btn[data-tab="'+nome+'"]').classList.add('active');
-  document.getElementById('fabAdd').style.display = (nome==='conta' || nome==='notas' || nome==='ajustes' || nome==='inicio') ? 'none' : 'flex';
-  if(nome==='inicio') renderInicio();
-  if(nome==='clientes') renderClientes();
-  if(nome==='produtos') renderProdutos();
-  if(nome==='conta') renderContaScreen();
-  if(nome==='notas') trocarHistorico(subHistoricoAtual);
-  if(nome==='ajustes') mostrarInfoBackup();
-}
-function trocarHistorico(qual){
-  subHistoricoAtual = qual;
-  document.getElementById('segNotas').classList.toggle('active', qual==='notas');
-  document.getElementById('segPagamentos').classList.toggle('active', qual==='pagamentos');
-  document.getElementById('histNotasView').style.display = qual==='notas' ? 'block' : 'none';
-  document.getElementById('histPagamentosView').style.display = qual==='pagamentos' ? 'block' : 'none';
-  if(qual==='notas') renderNotas();
-  else renderPagamentos();
-}
-function fabClick(){
-  const ativa = document.querySelector('.tab-btn.active').dataset.tab;
-  if(ativa==='clientes') abrirNovoCliente();
-  if(ativa==='produtos') abrirNovoProduto();
-}
-function fecharOverlay(id){ document.getElementById(id).classList.remove('show'); }
-function abrirOverlay(id){ document.getElementById(id).classList.add('show'); }
-
-/* Esc fecha a janela/tela (overlay) que estiver aberta */
-document.addEventListener('keydown', function(e){
-  if(e.key === 'Escape' || e.key === 'Esc'){
-    document.querySelectorAll('.overlay.show').forEach(o => o.classList.remove('show'));
-  }
-});
-/* Tocar fora da janela (no fundo escurecido) também fecha */
-document.querySelectorAll('.overlay').forEach(function(ov){
-  ov.addEventListener('click', function(e){
-    if(e.target === ov) ov.classList.remove('show');
-  });
-});
-
-/* ==================== CLIENTES ==================== */
-function totalRecebidoCliente(clienteId){
-  return DB.lancamentos
-    .filter(l => l.clienteId === clienteId && l.valor < 0)
-    .reduce((s,l)=> s + Math.abs(l.valor), 0);
-}
-
-function renderInicio(){
-  const totalAReceber = DB.clientes.reduce((s,c)=> s + Math.max(0, saldoCliente(c.id)), 0);
-  const totalRecebido = DB.lancamentos.filter(l=>l.valor<0).reduce((s,l)=> s + Math.abs(l.valor), 0);
-  const totalFaturado = DB.lancamentos.filter(l=>l.valor>0).reduce((s,l)=> s + l.valor, 0);
-  document.getElementById('iniASReceber').textContent = fmt(totalAReceber);
-  document.getElementById('iniRecebido').textContent = fmt(totalRecebido);
-  document.getElementById('iniFaturado').textContent = fmt(totalFaturado);
-
-  const devendo = DB.clientes.filter(c=> saldoCliente(c.id) > 0.004);
-  const quitados = DB.clientes.length - devendo.length;
-  document.getElementById('iniQtdClientes').textContent = DB.clientes.length;
-  document.getElementById('iniQtdDevendo').textContent = devendo.length;
-  document.getElementById('iniQtdQuitados').textContent = quitados;
-
-  const el = document.getElementById('iniMaioresDevedores');
-  const ranking = devendo
-    .map(c=> ({c, saldo: saldoCliente(c.id)}))
-    .sort((a,b)=> b.saldo - a.saldo)
-    .slice(0,5);
-  if(ranking.length===0){
-    el.innerHTML = '<div class="empty-state"><div class="glyph">✅</div><p>Nenhum cliente devendo no momento.</p></div>';
-    return;
-  }
-  el.innerHTML = ranking.map(({c,saldo})=>`
+      const el = document.getElementById('iniMaioresDevedores');
+      const ranking = devendo
+        .map(c => ({c, saldo: saldoCliente(c.id)}))
+        .sort((a, b) => b.saldo - a.saldo)
+        .slice(0, 5);
+      if (ranking.length === 0) {
+        el.innerHTML = '<div class="empty-state"><div class="glyph">✅</div><p>Nenhum cliente devendo no momento.</p></div>';
+        return;
+      }
+      el.innerHTML = ranking.map(({c, saldo}) => `
     <div class="card" onclick="abrirDetalheCliente('${c.id}')">
       <div class="info">
         <div class="nome">${escapeHtml(c.nome)}</div>
-        <div class="sub">${escapeHtml(c.endereco||'Sem endereço')}</div>
+        <div class="sub">${escapeHtml(c.endereco || 'Sem endereço')}</div>
       </div>
       <div class="valor devendo">${fmt(saldo)}</div>
     </div>`).join('');
-}
-function renderClientes(){
-  const el = document.getElementById('listaClientes');
-  if(DB.clientes.length===0){
-    el.innerHTML = '<div class="empty-state"><div class="glyph">👤</div><p>Nenhum cliente cadastrado ainda.<br>Toque no + para adicionar.</p></div>';
-    return;
-  }
-  el.innerHTML = DB.clientes.map(c=>{
-    const saldo = saldoCliente(c.id);
-    const recebido = totalRecebidoCliente(c.id);
-    const cls = saldo > 0.004 ? 'devendo' : 'quitado';
-    return `<div class="card" onclick="abrirDetalheCliente('${c.id}')">
+    }
+    function renderClientes() {
+      const el = document.getElementById('listaClientes');
+      if (DB.clientes.length === 0) {
+        el.innerHTML = '<div class="empty-state"><div class="glyph">👤</div><p>Nenhum cliente cadastrado ainda.<br>Toque no + para adicionar.</p></div>';
+        return;
+      }
+      el.innerHTML = DB.clientes.map(c => {
+        const saldo = saldoCliente(c.id);
+        const recebido = totalRecebidoCliente(c.id);
+        const cls = saldo > 0.004 ? 'devendo' : 'quitado';
+        return `<div class="card" onclick="abrirDetalheCliente('${c.id}')">
       <div class="info">
         <div class="nome">${escapeHtml(c.nome)}</div>
-        <div class="sub">${escapeHtml(c.endereco||'Sem endereço')}</div>
+        <div class="sub">${escapeHtml(c.endereco || 'Sem endereço')}</div>
         <div class="sub" style="margin-top:5px; white-space:normal;">
           <span style="color:var(--sage); font-weight:700;">Recebido: ${fmt(recebido)}</span>
           <span style="margin:0 5px;">·</span>
@@ -827,177 +1133,177 @@ function renderClientes(){
       </div>
       <div class="valor ${cls}">${fmt(saldo)}</div>
     </div>`;
-  }).join('');
-}
-function abrirNovoCliente(){
-  document.getElementById('tituloFormCliente').textContent = 'Novo cliente';
-  document.getElementById('clienteId').value = '';
-  document.getElementById('clienteNome').value = '';
-  document.getElementById('clienteEndereco').value = '';
-  document.getElementById('clienteTelefone').value = '';
-  document.getElementById('btnExcluirCliente').style.display = 'none';
-  abrirOverlay('ovCliente');
-}
-function salvarCliente(){
-  const nome = document.getElementById('clienteNome').value.trim();
-  if(!nome){ alert('Digite o nome do cliente.'); return; }
-  const id = document.getElementById('clienteId').value;
-  const dados = {
-    nome,
-    endereco: document.getElementById('clienteEndereco').value.trim(),
-    telefone: document.getElementById('clienteTelefone').value.trim(),
-  };
-  if(id){
-    const c = DB.clientes.find(x=>x.id===id);
-    Object.assign(c, dados);
-  } else {
-    DB.clientes.push({id: uid(), ...dados});
-  }
-  salvar();
-  fecharOverlay('ovCliente');
-  renderClientes();
-  popularSelectClientes();
-}
-function abrirDetalheCliente(id){
-  clienteDetalheAtualId = id;
-  const c = DB.clientes.find(x=>x.id===id);
-  document.getElementById('detNome').textContent = c.nome;
-  document.getElementById('detEndereco').textContent = c.endereco || 'Sem endereço cadastrado';
-  document.getElementById('detTotalRecebido').textContent = fmt(totalRecebidoCliente(id));
-  document.getElementById('detSaldo').textContent = fmt(saldoCliente(id));
-  const hist = DB.lancamentos.filter(l=>l.clienteId===id).sort((a,b)=> b.data.localeCompare(a.data));
-  const histEl = document.getElementById('detHistorico');
-  if(hist.length===0){
-    histEl.innerHTML = '<div class="empty-state" style="padding:20px;"><p>Nenhum lançamento ainda.</p></div>';
-  } else {
-    histEl.innerHTML = hist.map(l=>{
-      const cor = l.valor >= 0 ? 'devendo' : 'quitado';
-      const sinal = l.valor >= 0 ? '+' : '';
-      const ehConta = 'itens' in l;
-      const clickAttr = ehConta ? `onclick="abrirNotaHistorico('${l.id}')"` : '';
-      return `<div class="card" style="cursor:${ehConta?'pointer':'default'};" ${clickAttr}>
+      }).join('');
+    }
+    function abrirNovoCliente() {
+      document.getElementById('tituloFormCliente').textContent = 'Novo cliente';
+      document.getElementById('clienteId').value = '';
+      document.getElementById('clienteNome').value = '';
+      document.getElementById('clienteEndereco').value = '';
+      document.getElementById('clienteTelefone').value = '';
+      document.getElementById('btnExcluirCliente').style.display = 'none';
+      abrirOverlay('ovCliente');
+    }
+    function salvarCliente() {
+      const nome = document.getElementById('clienteNome').value.trim();
+      if (!nome) {alert('Digite o nome do cliente.'); return;}
+      const id = document.getElementById('clienteId').value;
+      const dados = {
+        nome,
+        endereco: document.getElementById('clienteEndereco').value.trim(),
+        telefone: document.getElementById('clienteTelefone').value.trim(),
+      };
+      if (id) {
+        const c = DB.clientes.find(x => x.id === id);
+        Object.assign(c, dados);
+      } else {
+        DB.clientes.push({id: uid(), ...dados});
+      }
+      salvar();
+      fecharOverlay('ovCliente');
+      renderClientes();
+      popularSelectClientes();
+    }
+    function abrirDetalheCliente(id) {
+      clienteDetalheAtualId = id;
+      const c = DB.clientes.find(x => x.id === id);
+      document.getElementById('detNome').textContent = c.nome;
+      document.getElementById('detEndereco').textContent = c.endereco || 'Sem endereço cadastrado';
+      document.getElementById('detTotalRecebido').textContent = fmt(totalRecebidoCliente(id));
+      document.getElementById('detSaldo').textContent = fmt(saldoCliente(id));
+      const hist = DB.lancamentos.filter(l => l.clienteId === id).sort((a, b) => b.data.localeCompare(a.data));
+      const histEl = document.getElementById('detHistorico');
+      if (hist.length === 0) {
+        histEl.innerHTML = '<div class="empty-state" style="padding:20px;"><p>Nenhum lançamento ainda.</p></div>';
+      } else {
+        histEl.innerHTML = hist.map(l => {
+          const cor = l.valor >= 0 ? 'devendo' : 'quitado';
+          const sinal = l.valor >= 0 ? '+' : '';
+          const ehConta = 'itens' in l;
+          const clickAttr = ehConta ? `onclick="abrirNotaHistorico('${l.id}')"` : '';
+          return `<div class="card" style="cursor:${ehConta ? 'pointer' : 'default'};" ${clickAttr}>
         <div class="info">
           <div class="nome" style="font-size:13.5px;">${escapeHtml(l.descricao)}</div>
           <div class="sub">${l.dataFormatada}${ehConta ? ' · toque para ver a nota' : ''}</div>
         </div>
         <div class="valor ${cor}" style="font-size:14px;">${sinal}${fmt(l.valor)}</div>
       </div>`;
-    }).join('');
-  }
-  abrirOverlay('ovDetalheCliente');
-}
-function editarClienteAtual(){
-  const c = DB.clientes.find(x=>x.id===clienteDetalheAtualId);
-  document.getElementById('tituloFormCliente').textContent = 'Editar cliente';
-  document.getElementById('clienteId').value = c.id;
-  document.getElementById('clienteNome').value = c.nome;
-  document.getElementById('clienteEndereco').value = c.endereco||'';
-  document.getElementById('clienteTelefone').value = c.telefone||'';
-  document.getElementById('btnExcluirCliente').style.display = 'inline-flex';
-  fecharOverlay('ovDetalheCliente');
-  abrirOverlay('ovCliente');
-}
-function excluirClienteAtual(){
-  const id = document.getElementById('clienteId').value;
-  if(!id) return;
-  if(!confirm('Excluir este cliente e todo o histórico dele?')) return;
-  DB.clientes = DB.clientes.filter(c=>c.id!==id);
-  DB.lancamentos = DB.lancamentos.filter(l=>l.clienteId!==id);
-  salvar();
-  fecharOverlay('ovCliente');
-  renderClientes();
-  popularSelectClientes();
-}
-function lancarContaParaClienteAtual(){
-  fecharOverlay('ovDetalheCliente');
-  trocarTab('conta');
-  document.getElementById('selCliente').value = clienteDetalheAtualId;
-  renderContaScreen();
-}
+        }).join('');
+      }
+      abrirOverlay('ovDetalheCliente');
+    }
+    function editarClienteAtual() {
+      const c = DB.clientes.find(x => x.id === clienteDetalheAtualId);
+      document.getElementById('tituloFormCliente').textContent = 'Editar cliente';
+      document.getElementById('clienteId').value = c.id;
+      document.getElementById('clienteNome').value = c.nome;
+      document.getElementById('clienteEndereco').value = c.endereco || '';
+      document.getElementById('clienteTelefone').value = c.telefone || '';
+      document.getElementById('btnExcluirCliente').style.display = 'inline-flex';
+      fecharOverlay('ovDetalheCliente');
+      abrirOverlay('ovCliente');
+    }
+    function excluirClienteAtual() {
+      const id = document.getElementById('clienteId').value;
+      if (!id) return;
+      if (!confirm('Excluir este cliente e todo o histórico dele?')) return;
+      DB.clientes = DB.clientes.filter(c => c.id !== id);
+      DB.lancamentos = DB.lancamentos.filter(l => l.clienteId !== id);
+      salvar();
+      fecharOverlay('ovCliente');
+      renderClientes();
+      popularSelectClientes();
+    }
+    function lancarContaParaClienteAtual() {
+      fecharOverlay('ovDetalheCliente');
+      trocarTab('conta');
+      document.getElementById('selCliente').value = clienteDetalheAtualId;
+      renderContaScreen();
+    }
 
-/* ==================== PRODUTOS ==================== */
-function renderProdutos(){
-  const el = document.getElementById('listaProdutos');
-  if(DB.produtos.length===0){
-    el.innerHTML = '<div class="empty-state"><div class="glyph">📦</div><p>Nenhum produto cadastrado ainda.<br>Toque no + para adicionar.</p></div>';
-    return;
-  }
-  el.innerHTML = DB.produtos.map(p=>`
+    /* ==================== PRODUTOS ==================== */
+    function renderProdutos() {
+      const el = document.getElementById('listaProdutos');
+      if (DB.produtos.length === 0) {
+        el.innerHTML = '<div class="empty-state"><div class="glyph">📦</div><p>Nenhum produto cadastrado ainda.<br>Toque no + para adicionar.</p></div>';
+        return;
+      }
+      el.innerHTML = DB.produtos.map(p => `
     <div class="card" onclick="abrirEditarProduto('${p.id}')">
       <div class="info"><div class="nome">${escapeHtml(p.nome)}</div></div>
       <div class="valor" style="color:var(--ink);">${fmt(p.preco)}</div>
     </div>`).join('');
-}
-function abrirNovoProduto(){
-  document.getElementById('tituloFormProduto').textContent = 'Novo produto';
-  document.getElementById('produtoId').value = '';
-  document.getElementById('produtoNome').value = '';
-  document.getElementById('produtoPreco').value = '';
-  document.getElementById('btnExcluirProduto').style.display = 'none';
-  abrirOverlay('ovProduto');
-}
-function abrirEditarProduto(id){
-  const p = DB.produtos.find(x=>x.id===id);
-  document.getElementById('tituloFormProduto').textContent = 'Editar produto';
-  document.getElementById('produtoId').value = p.id;
-  document.getElementById('produtoNome').value = p.nome;
-  document.getElementById('produtoPreco').value = p.preco;
-  document.getElementById('btnExcluirProduto').style.display = 'inline-flex';
-  abrirOverlay('ovProduto');
-}
-function salvarProduto(){
-  const nome = document.getElementById('produtoNome').value.trim();
-  const preco = parseFloat(document.getElementById('produtoPreco').value);
-  if(!nome || isNaN(preco)){ alert('Preencha nome e preço do produto.'); return; }
-  const id = document.getElementById('produtoId').value;
-  if(id){
-    const p = DB.produtos.find(x=>x.id===id);
-    p.nome = nome; p.preco = preco;
-  } else {
-    DB.produtos.push({id: uid(), nome, preco});
-  }
-  salvar();
-  fecharOverlay('ovProduto');
-  renderProdutos();
-}
-function excluirProdutoAtual(){
-  const id = document.getElementById('produtoId').value;
-  if(!id) return;
-  if(!confirm('Excluir este produto?')) return;
-  DB.produtos = DB.produtos.filter(p=>p.id!==id);
-  salvar();
-  fecharOverlay('ovProduto');
-  renderProdutos();
-}
+    }
+    function abrirNovoProduto() {
+      document.getElementById('tituloFormProduto').textContent = 'Novo produto';
+      document.getElementById('produtoId').value = '';
+      document.getElementById('produtoNome').value = '';
+      document.getElementById('produtoPreco').value = '';
+      document.getElementById('btnExcluirProduto').style.display = 'none';
+      abrirOverlay('ovProduto');
+    }
+    function abrirEditarProduto(id) {
+      const p = DB.produtos.find(x => x.id === id);
+      document.getElementById('tituloFormProduto').textContent = 'Editar produto';
+      document.getElementById('produtoId').value = p.id;
+      document.getElementById('produtoNome').value = p.nome;
+      document.getElementById('produtoPreco').value = p.preco;
+      document.getElementById('btnExcluirProduto').style.display = 'inline-flex';
+      abrirOverlay('ovProduto');
+    }
+    function salvarProduto() {
+      const nome = document.getElementById('produtoNome').value.trim();
+      const preco = parseFloat(document.getElementById('produtoPreco').value);
+      if (!nome || isNaN(preco)) {alert('Preencha nome e preço do produto.'); return;}
+      const id = document.getElementById('produtoId').value;
+      if (id) {
+        const p = DB.produtos.find(x => x.id === id);
+        p.nome = nome; p.preco = preco;
+      } else {
+        DB.produtos.push({id: uid(), nome, preco});
+      }
+      salvar();
+      fecharOverlay('ovProduto');
+      renderProdutos();
+    }
+    function excluirProdutoAtual() {
+      const id = document.getElementById('produtoId').value;
+      if (!id) return;
+      if (!confirm('Excluir este produto?')) return;
+      DB.produtos = DB.produtos.filter(p => p.id !== id);
+      salvar();
+      fecharOverlay('ovProduto');
+      renderProdutos();
+    }
 
-/* ==================== NOVA CONTA ==================== */
-function popularSelectClientes(){
-  const sel = document.getElementById('selCliente');
-  const atual = sel.value;
-  sel.innerHTML = DB.clientes.map(c=>`<option value="${c.id}">${escapeHtml(c.nome)}</option>`).join('');
-  if(atual) sel.value = atual;
-}
-function renderContaScreen(){
-  popularSelectClientes();
-  const tem = DB.clientes.length>0;
-  document.getElementById('semClienteAviso').style.display = tem ? 'none':'block';
-  document.getElementById('contaCorpo').style.display = tem ? 'block':'none';
-  if(!tem) return;
-  renderListaItensConta();
-  atualizarTotaisConta();
-}
-document.getElementById('selCliente').addEventListener('change', atualizarTotaisConta);
-document.getElementById('valorAvulso').addEventListener('input', atualizarTotaisConta);
+    /* ==================== NOVA CONTA ==================== */
+    function popularSelectClientes() {
+      const sel = document.getElementById('selCliente');
+      const atual = sel.value;
+      sel.innerHTML = DB.clientes.map(c => `<option value="${c.id}">${escapeHtml(c.nome)}</option>`).join('');
+      if (atual) sel.value = atual;
+    }
+    function renderContaScreen() {
+      popularSelectClientes();
+      const tem = DB.clientes.length > 0;
+      document.getElementById('semClienteAviso').style.display = tem ? 'none' : 'block';
+      document.getElementById('contaCorpo').style.display = tem ? 'block' : 'none';
+      if (!tem) return;
+      renderListaItensConta();
+      atualizarTotaisConta();
+    }
+    document.getElementById('selCliente').addEventListener('change', atualizarTotaisConta);
+    document.getElementById('valorAvulso').addEventListener('input', atualizarTotaisConta);
 
-function renderListaItensConta(){
-  const el = document.getElementById('listaItensConta');
-  if(DB.produtos.length===0){
-    el.innerHTML = '<div class="empty-state" style="padding:16px;"><p>Cadastre produtos para adicioná-los rápido aqui (opcional).</p></div>';
-    return;
-  }
-  el.innerHTML = DB.produtos.map(p=>{
-    const qtd = contaItensSelecionados[p.id] || 0;
-    return `<div class="item-row">
+    function renderListaItensConta() {
+      const el = document.getElementById('listaItensConta');
+      if (DB.produtos.length === 0) {
+        el.innerHTML = '<div class="empty-state" style="padding:16px;"><p>Cadastre produtos para adicioná-los rápido aqui (opcional).</p></div>';
+        return;
+      }
+      el.innerHTML = DB.produtos.map(p => {
+        const qtd = contaItensSelecionados[p.id] || 0;
+        return `<div class="item-row">
       <div class="nome">${escapeHtml(p.nome)}</div>
       <div class="preco">${fmt(p.preco)}</div>
       <div class="qty-ctrl">
@@ -1006,134 +1312,140 @@ function renderListaItensConta(){
         <button onclick="mudarQtd('${p.id}', 1)">+</button>
       </div>
     </div>`;
-  }).join('');
-}
-function mudarQtd(produtoId, delta){
-  const atual = contaItensSelecionados[produtoId] || 0;
-  const novo = Math.max(0, atual + delta);
-  if(novo===0) delete contaItensSelecionados[produtoId];
-  else contaItensSelecionados[produtoId] = novo;
-  renderListaItensConta();
-  atualizarTotaisConta();
-}
-function calcularValorContaAtual(){
-  let total = 0;
-  for(const pid in contaItensSelecionados){
-    const p = DB.produtos.find(x=>x.id===pid);
-    if(p) total += p.preco * contaItensSelecionados[pid];
-  }
-  const avulso = parseFloat(document.getElementById('valorAvulso').value);
-  if(!isNaN(avulso)) total += avulso;
-  return total;
-}
-function atualizarTotaisConta(){
-  const clienteId = document.getElementById('selCliente').value;
-  const saldoAnterior = clienteId ? saldoCliente(clienteId) : 0;
-  const valorConta = calcularValorContaAtual();
-  document.getElementById('tSaldoAnterior').textContent = fmt(saldoAnterior);
-  document.getElementById('tValorConta').textContent = fmt(valorConta);
-  document.getElementById('tSaldoAtual').textContent = fmt(saldoAnterior + valorConta);
-}
+      }).join('');
+    }
+    function mudarQtd(produtoId, delta) {
+      const atual = contaItensSelecionados[produtoId] || 0;
+      const novo = Math.max(0, atual + delta);
+      if (novo === 0) delete contaItensSelecionados[produtoId];
+      else contaItensSelecionados[produtoId] = novo;
+      renderListaItensConta();
+      atualizarTotaisConta();
+    }
+    function calcularValorContaAtual() {
+      let total = 0;
+      for (const pid in contaItensSelecionados) {
+        const p = DB.produtos.find(x => x.id === pid);
+        if (p) total += p.preco * contaItensSelecionados[pid];
+      }
+      const avulso = parseFloat(document.getElementById('valorAvulso').value);
+      if (!isNaN(avulso)) total += avulso;
+      return total;
+    }
+    function atualizarTotaisConta() {
+      const clienteId = document.getElementById('selCliente').value;
+      const saldoAnterior = clienteId ? saldoCliente(clienteId) : 0;
+      const valorConta = calcularValorContaAtual();
+      document.getElementById('tSaldoAnterior').textContent = fmt(saldoAnterior);
+      document.getElementById('tValorConta').textContent = fmt(valorConta);
+      document.getElementById('tSaldoAtual').textContent = fmt(saldoAnterior + valorConta);
+    }
 
-/* ==================== PAGAMENTO ==================== */
-function abrirRegistrarPagamento(){
-  const clienteId = document.getElementById('selCliente').value;
-  if(!clienteId){ alert('Selecione um cliente.'); return; }
-  const c = DB.clientes.find(x=>x.id===clienteId);
-  document.getElementById('pagCliente').textContent = c.nome + ' — deve ' + fmt(saldoCliente(clienteId));
-  document.getElementById('pagValor').value = '';
-  abrirOverlay('ovPagamento');
-}
-function confirmarPagamento(){
-  const clienteId = document.getElementById('selCliente').value;
-  const valor = parseFloat(document.getElementById('pagValor').value);
-  if(isNaN(valor) || valor<=0){ alert('Digite um valor de pagamento válido.'); return; }
-  DB.lancamentos.push({
-    id: uid(), clienteId, data: new Date().toISOString(), dataFormatada: hojeStr(),
-    descricao: 'Pagamento recebido', valor: -valor
-  });
-  salvar();
-  fecharOverlay('ovPagamento');
-  atualizarTotaisConta();
-  renderClientes();
-}
+    /* ==================== PAGAMENTO ==================== */
+    function abrirRegistrarPagamento() {
+      const clienteId = document.getElementById('selCliente').value;
+      if (!clienteId) {alert('Selecione um cliente.'); return;}
+      const c = DB.clientes.find(x => x.id === clienteId);
+      document.getElementById('pagCliente').textContent = c.nome + ' — deve ' + fmt(saldoCliente(clienteId));
+      document.getElementById('pagValor').value = '';
+      abrirOverlay('ovPagamento');
+    }
+    function confirmarPagamento() {
+      const clienteId = document.getElementById('selCliente').value;
+      const valor = parseFloat(document.getElementById('pagValor').value);
+      if (isNaN(valor) || valor <= 0) {alert('Digite um valor de pagamento válido.'); return;}
+      DB.lancamentos.push({
+        id: uid(), clienteId, data: new Date().toISOString(), dataFormatada: hojeStr(),
+        descricao: 'Pagamento recebido', valor: -valor
+      });
+      salvar();
+      fecharOverlay('ovPagamento');
+      atualizarTotaisConta();
+      renderClientes();
+    }
 
-/* ==================== GERAR NOTA ==================== */
-function escapeHtml(s){
-  return (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-function gerarNota(){
-  const clienteId = document.getElementById('selCliente').value;
-  if(!clienteId){ alert('Selecione um cliente.'); return; }
-  const valorConta = calcularValorContaAtual();
-  const temItens = Object.keys(contaItensSelecionados).length>0;
-  const avulsoVal = parseFloat(document.getElementById('valorAvulso').value);
-  const temAvulso = !isNaN(avulsoVal) && avulsoVal>0;
-  if(!temItens && !temAvulso){ alert('Adicione ao menos um item ou um valor avulso.'); return; }
+    /* ==================== GERAR NOTA ==================== */
+    function escapeHtml(s) {
+      return (s || '').replace(/[&<>"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[m]));
+    }
+    function gerarNota() {
+      const clienteId = document.getElementById('selCliente').value;
+      if (!clienteId) {alert('Selecione um cliente.'); return;}
+      const valorConta = calcularValorContaAtual();
+      const temItens = Object.keys(contaItensSelecionados).length > 0;
+      const avulsoVal = parseFloat(document.getElementById('valorAvulso').value);
+      const temAvulso = !isNaN(avulsoVal) && avulsoVal > 0;
+      if (!temItens && !temAvulso) {alert('Adicione ao menos um item ou um valor avulso.'); return;}
 
-  const c = DB.clientes.find(x=>x.id===clienteId);
-  const saldoAnterior = saldoCliente(clienteId);
+      const c = DB.clientes.find(x => x.id === clienteId);
+      const saldoAnterior = saldoCliente(clienteId);
 
-  const itensDescricao = [];
-  for(const pid in contaItensSelecionados){
-    const p = DB.produtos.find(x=>x.id===pid);
-    if(p) itensDescricao.push(`${contaItensSelecionados[pid]}x ${p.nome}`);
-  }
-  const descAvulsoTxt = document.getElementById('descAvulso').value.trim();
-  if(temAvulso) itensDescricao.push(descAvulsoTxt || 'Valor avulso');
+      const itensDescricao = [];
+      for (const pid in contaItensSelecionados) {
+        const p = DB.produtos.find(x => x.id === pid);
+        if (p) itensDescricao.push(`${contaItensSelecionados[pid]}x ${p.nome}`);
+      }
+      const descAvulsoTxt = document.getElementById('descAvulso').value.trim();
+      if (temAvulso) itensDescricao.push(descAvulsoTxt || 'Valor avulso');
 
-  const lanc = {
-    id: uid(), clienteId, data: new Date().toISOString(), dataFormatada: hojeStr(),
-    descricao: itensDescricao.join(', ') || 'Conta',
-    valor: valorConta,
-    itens: {...contaItensSelecionados},
-    avulso: temAvulso ? {valor: avulsoVal, desc: descAvulsoTxt} : null
-  };
-  DB.lancamentos.push(lanc);
-  salvar();
+      const lanc = {
+        id: uid(), clienteId, data: new Date().toISOString(), dataFormatada: hojeStr(),
+        descricao: itensDescricao.join(', ') || 'Conta',
+        valor: valorConta,
+        itens: {...contaItensSelecionados},
+        avulso: temAvulso ? {valor: avulsoVal, desc: descAvulsoTxt} : null
+      };
+      DB.lancamentos.push(lanc);
+      salvar();
 
-  renderNotaEmTela(c, lanc, saldoAnterior);
+      renderNotaEmTela(c, lanc, saldoAnterior);
 
-  // limpa a conta em andamento
-  contaItensSelecionados = {};
-  document.getElementById('valorAvulso').value = '';
-  document.getElementById('descAvulso').value = '';
-  renderListaItensConta();
-  atualizarTotaisConta();
-  renderClientes();
-}
+      // limpa a conta em andamento
+      contaItensSelecionados = {};
+      document.getElementById('valorAvulso').value = '';
+      document.getElementById('descAvulso').value = '';
+      renderListaItensConta();
+      atualizarTotaisConta();
+      renderClientes();
+    }
 
-let notaAtualLancId = null;
-function renderNotaEmTela(cliente, lanc, saldoAnterior){
-  notaAtualLancId = lanc.id;
-  const saldoAtual = saldoAnterior + lanc.valor;
-  let linhasItens = '';
-  for(const pid in (lanc.itens||{})){
-    const p = DB.produtos.find(x=>x.id===pid);
-    if(!p) continue;
-    const qtd = lanc.itens[pid];
-    linhasItens += `<tr>
+    let notaAtualLancId = null;
+    function renderNotaEmTela(cliente, lanc, saldoAnterior) {
+      notaAtualLancId = lanc.id;
+      const saldoAtual = saldoAnterior + lanc.valor;
+      let linhasItens = '';
+      for (const pid in (lanc.itens || {})) {
+        const p = DB.produtos.find(x => x.id === pid);
+        if (!p) continue;
+        const qtd = lanc.itens[pid];
+        linhasItens += `<tr>
       <td class="qtd">${qtd}x</td>
       <td>${escapeHtml(p.nome)}</td>
-      <td class="val">${fmt(p.preco*qtd)}</td>
+      <td class="val">${fmt(p.preco * qtd)}</td>
     </tr>`;
-  }
-  if(lanc.avulso){
-    linhasItens += `<tr>
+      }
+      if (lanc.avulso) {
+        linhasItens += `<tr>
       <td class="qtd">1x</td>
       <td>${escapeHtml(lanc.avulso.desc || 'Valor avulso')}</td>
       <td class="val">${fmt(lanc.avulso.valor)}</td>
     </tr>`;
-  }
+      }
 
-  const html = `
+      const html = `
     <div class="nota-perf"></div>
     <div class="nota">
-      <div class="brand-line">Antonio Dental Tech</div>
+       <header>
+<div class="brand" style="display: flex; justify-content: center;">
+  <img src="logo.png" alt="Antonio Dental Tech">
+</div>
+  </header>
+
+
       <div class="tagline">Comprovante de conta</div>
       <hr>
       <div class="cliente-nome">${escapeHtml(cliente.nome)}</div>
-      <div class="cliente-end">${escapeHtml(cliente.endereco||'')}</div>
+      <div class="cliente-end">${escapeHtml(cliente.endereco || '')}</div>
       <div class="kv"><span class="k">Data</span><span>${lanc.dataFormatada}</span></div>
       <hr>
       <table>${linhasItens}</table>
@@ -1146,100 +1458,100 @@ function renderNotaEmTela(cliente, lanc, saldoAnterior){
       <div class="rodape">Guarde este comprovante</div>
     </div>
   `;
-  document.getElementById('notaConteudo').innerHTML = html;
-  abrirOverlay('ovNota');
-}
+      document.getElementById('notaConteudo').innerHTML = html;
+      abrirOverlay('ovNota');
+    }
 
-/* ==================== NOTAS SALVAS (histórico geral) ==================== */
-function saldoAnteriorDoLancamento(lanc){
-  return DB.lancamentos
-    .filter(l => l.clienteId === lanc.clienteId && l.data < lanc.data)
-    .reduce((s,l)=> s + l.valor, 0);
-}
-function renderNotas(){
-  const el = document.getElementById('listaNotas');
-  const notas = DB.lancamentos.filter(l => 'itens' in l).sort((a,b)=> b.data.localeCompare(a.data));
-  if(notas.length===0){
-    el.innerHTML = '<div class="empty-state"><div class="glyph">📋</div><p>Nenhuma nota gerada ainda.<br>Vá em "Nova conta" para lançar a primeira.</p></div>';
-    return;
-  }
-  el.innerHTML = notas.map(l=>{
-    const c = DB.clientes.find(x=>x.id===l.clienteId);
-    return `<div class="card" onclick="abrirNotaHistorico('${l.id}')">
+    /* ==================== NOTAS SALVAS (histórico geral) ==================== */
+    function saldoAnteriorDoLancamento(lanc) {
+      return DB.lancamentos
+        .filter(l => l.clienteId === lanc.clienteId && l.data < lanc.data)
+        .reduce((s, l) => s + l.valor, 0);
+    }
+    function renderNotas() {
+      const el = document.getElementById('listaNotas');
+      const notas = DB.lancamentos.filter(l => 'itens' in l).sort((a, b) => b.data.localeCompare(a.data));
+      if (notas.length === 0) {
+        el.innerHTML = '<div class="empty-state"><div class="glyph">📋</div><p>Nenhuma nota gerada ainda.<br>Vá em "Nova conta" para lançar a primeira.</p></div>';
+        return;
+      }
+      el.innerHTML = notas.map(l => {
+        const c = DB.clientes.find(x => x.id === l.clienteId);
+        return `<div class="card" onclick="abrirNotaHistorico('${l.id}')">
       <div class="info">
         <div class="nome">${escapeHtml(c ? c.nome : 'Cliente removido')}</div>
         <div class="sub">${l.dataFormatada} · ${escapeHtml(l.descricao)}</div>
       </div>
       <div class="valor" style="color:var(--ink);">${fmt(l.valor)}</div>
     </div>`;
-  }).join('');
-}
-function renderPagamentos(){
-  const el = document.getElementById('listaPagamentos');
-  const resumo = document.getElementById('pagamentosResumo');
-  const pagamentos = DB.lancamentos.filter(l => l.valor < 0).sort((a,b)=> b.data.localeCompare(a.data));
-  const totalRecebido = pagamentos.reduce((s,l)=> s + Math.abs(l.valor), 0);
-  resumo.innerHTML = `<div class="row final"><span>Total recebido</span><span class="val" style="color:var(--sage);">${fmt(totalRecebido)}</span></div>`;
-  if(pagamentos.length===0){
-    el.innerHTML = '<div class="empty-state"><div class="glyph">💰</div><p>Nenhum pagamento registrado ainda.</p></div>';
-    return;
-  }
-  el.innerHTML = pagamentos.map(l=>{
-    const c = DB.clientes.find(x=>x.id===l.clienteId);
-    return `<div class="card" style="cursor:default;">
+      }).join('');
+    }
+    function renderPagamentos() {
+      const el = document.getElementById('listaPagamentos');
+      const resumo = document.getElementById('pagamentosResumo');
+      const pagamentos = DB.lancamentos.filter(l => l.valor < 0).sort((a, b) => b.data.localeCompare(a.data));
+      const totalRecebido = pagamentos.reduce((s, l) => s + Math.abs(l.valor), 0);
+      resumo.innerHTML = `<div class="row final"><span>Total recebido</span><span class="val" style="color:var(--sage);">${fmt(totalRecebido)}</span></div>`;
+      if (pagamentos.length === 0) {
+        el.innerHTML = '<div class="empty-state"><div class="glyph">💰</div><p>Nenhum pagamento registrado ainda.</p></div>';
+        return;
+      }
+      el.innerHTML = pagamentos.map(l => {
+        const c = DB.clientes.find(x => x.id === l.clienteId);
+        return `<div class="card" style="cursor:default;">
       <div class="info">
         <div class="nome">${escapeHtml(c ? c.nome : 'Cliente removido')}</div>
         <div class="sub">${l.dataFormatada}</div>
       </div>
       <div class="valor quitado">${fmt(Math.abs(l.valor))}</div>
     </div>`;
-  }).join('');
-}
-function abrirNotaHistorico(lancId){
-  const lanc = DB.lancamentos.find(l=>l.id===lancId);
-  if(!lanc) return;
-  const c = DB.clientes.find(x=>x.id===lanc.clienteId);
-  if(!c){ alert('Este cliente foi excluído.'); return; }
-  const saldoAnterior = saldoAnteriorDoLancamento(lanc);
-  renderNotaEmTela(c, lanc, saldoAnterior);
-}
-function excluirNotaAtual(){
-  if(!notaAtualLancId) return;
-  if(!confirm('Excluir esta nota? O valor sairá do débito do cliente.')) return;
-  DB.lancamentos = DB.lancamentos.filter(l=>l.id!==notaAtualLancId);
-  salvar();
-  notaAtualLancId = null;
-  fecharOverlay('ovNota');
-  renderClientes();
-  renderNotas();
-  atualizarTotaisConta();
-}
+      }).join('');
+    }
+    function abrirNotaHistorico(lancId) {
+      const lanc = DB.lancamentos.find(l => l.id === lancId);
+      if (!lanc) return;
+      const c = DB.clientes.find(x => x.id === lanc.clienteId);
+      if (!c) {alert('Este cliente foi excluído.'); return;}
+      const saldoAnterior = saldoAnteriorDoLancamento(lanc);
+      renderNotaEmTela(c, lanc, saldoAnterior);
+    }
+    function excluirNotaAtual() {
+      if (!notaAtualLancId) return;
+      if (!confirm('Excluir esta nota? O valor sairá do débito do cliente.')) return;
+      DB.lancamentos = DB.lancamentos.filter(l => l.id !== notaAtualLancId);
+      salvar();
+      notaAtualLancId = null;
+      fecharOverlay('ovNota');
+      renderClientes();
+      renderNotas();
+      atualizarTotaisConta();
+    }
 
-/* ==================== EDITAR NOTA ==================== */
-let editItensSelecionados = {};
-function editarNotaAtual(){
-  const lanc = DB.lancamentos.find(l=>l.id===notaAtualLancId);
-  if(!lanc) return;
-  const c = DB.clientes.find(x=>x.id===lanc.clienteId);
-  document.getElementById('editNotaId').value = lanc.id;
-  document.getElementById('editNotaCliente').textContent = c ? c.nome : '';
-  editItensSelecionados = {...(lanc.itens||{})};
-  document.getElementById('editValorAvulso').value = lanc.avulso ? lanc.avulso.valor : '';
-  document.getElementById('editDescAvulso').value = lanc.avulso ? (lanc.avulso.desc||'') : '';
-  renderListaItensEdicao();
-  atualizarTotalEdicao();
-  fecharOverlay('ovNota');
-  abrirOverlay('ovEditarNota');
-}
-function renderListaItensEdicao(){
-  const el = document.getElementById('listaItensEdicao');
-  if(DB.produtos.length===0){
-    el.innerHTML = '<div class="empty-state" style="padding:16px;"><p>Nenhum produto cadastrado.</p></div>';
-    return;
-  }
-  el.innerHTML = DB.produtos.map(p=>{
-    const qtd = editItensSelecionados[p.id] || 0;
-    return `<div class="item-row">
+    /* ==================== EDITAR NOTA ==================== */
+    let editItensSelecionados = {};
+    function editarNotaAtual() {
+      const lanc = DB.lancamentos.find(l => l.id === notaAtualLancId);
+      if (!lanc) return;
+      const c = DB.clientes.find(x => x.id === lanc.clienteId);
+      document.getElementById('editNotaId').value = lanc.id;
+      document.getElementById('editNotaCliente').textContent = c ? c.nome : '';
+      editItensSelecionados = {...(lanc.itens || {})};
+      document.getElementById('editValorAvulso').value = lanc.avulso ? lanc.avulso.valor : '';
+      document.getElementById('editDescAvulso').value = lanc.avulso ? (lanc.avulso.desc || '') : '';
+      renderListaItensEdicao();
+      atualizarTotalEdicao();
+      fecharOverlay('ovNota');
+      abrirOverlay('ovEditarNota');
+    }
+    function renderListaItensEdicao() {
+      const el = document.getElementById('listaItensEdicao');
+      if (DB.produtos.length === 0) {
+        el.innerHTML = '<div class="empty-state" style="padding:16px;"><p>Nenhum produto cadastrado.</p></div>';
+        return;
+      }
+      el.innerHTML = DB.produtos.map(p => {
+        const qtd = editItensSelecionados[p.id] || 0;
+        return `<div class="item-row">
       <div class="nome">${escapeHtml(p.nome)}</div>
       <div class="preco">${fmt(p.preco)}</div>
       <div class="qty-ctrl">
@@ -1248,169 +1560,170 @@ function renderListaItensEdicao(){
         <button onclick="mudarQtdEdicao('${p.id}', 1)">+</button>
       </div>
     </div>`;
-  }).join('');
-}
-function mudarQtdEdicao(produtoId, delta){
-  const atual = editItensSelecionados[produtoId] || 0;
-  const novo = Math.max(0, atual + delta);
-  if(novo===0) delete editItensSelecionados[produtoId];
-  else editItensSelecionados[produtoId] = novo;
-  renderListaItensEdicao();
-  atualizarTotalEdicao();
-}
-function calcularValorEdicaoAtual(){
-  let total = 0;
-  for(const pid in editItensSelecionados){
-    const p = DB.produtos.find(x=>x.id===pid);
-    if(p) total += p.preco * editItensSelecionados[pid];
-  }
-  const avulso = parseFloat(document.getElementById('editValorAvulso').value);
-  if(!isNaN(avulso)) total += avulso;
-  return total;
-}
-function atualizarTotalEdicao(){
-  document.getElementById('editValorTotal').textContent = fmt(calcularValorEdicaoAtual());
-}
-document.getElementById('editValorAvulso').addEventListener('input', atualizarTotalEdicao);
-function salvarEdicaoNota(){
-  const id = document.getElementById('editNotaId').value;
-  const lanc = DB.lancamentos.find(l=>l.id===id);
-  if(!lanc) return;
-  const valorTotal = calcularValorEdicaoAtual();
-  const temItens = Object.keys(editItensSelecionados).length>0;
-  const avulsoVal = parseFloat(document.getElementById('editValorAvulso').value);
-  const temAvulso = !isNaN(avulsoVal) && avulsoVal>0;
-  if(!temItens && !temAvulso){ alert('Adicione ao menos um item ou um valor avulso.'); return; }
-
-  const itensDescricao = [];
-  for(const pid in editItensSelecionados){
-    const p = DB.produtos.find(x=>x.id===pid);
-    if(p) itensDescricao.push(`${editItensSelecionados[pid]}x ${p.nome}`);
-  }
-  const descAvulsoTxt = document.getElementById('editDescAvulso').value.trim();
-  if(temAvulso) itensDescricao.push(descAvulsoTxt || 'Valor avulso');
-
-  lanc.itens = {...editItensSelecionados};
-  lanc.avulso = temAvulso ? {valor: avulsoVal, desc: descAvulsoTxt} : null;
-  lanc.valor = valorTotal;
-  lanc.descricao = itensDescricao.join(', ') || 'Conta';
-  salvar();
-
-  fecharOverlay('ovEditarNota');
-  const c = DB.clientes.find(x=>x.id===lanc.clienteId);
-  const saldoAnterior = saldoAnteriorDoLancamento(lanc);
-  renderNotaEmTela(c, lanc, saldoAnterior);
-  renderClientes();
-  renderNotas();
-  atualizarTotaisConta();
-}
-
-function prepararAreaImpressao(){
-  document.getElementById('printArea').innerHTML = document.getElementById('notaConteudo').innerHTML;
-}
-function limparModoImpressao(){
-  document.body.classList.remove('p09-print');
-}
-function imprimirNotaA4(){
-  limparModoImpressao();
-  prepararAreaImpressao();
-  window.print();
-}
-function imprimirNotaP09(){
-  prepararAreaImpressao();
-  document.body.classList.add('p09-print');
-  window.print();
-  setTimeout(limparModoImpressao, 1000);
-}
-window.addEventListener('afterprint', limparModoImpressao);
-async function compartilharNota(){
-  const texto = document.getElementById('notaConteudo').innerText;
-  if(navigator.share){
-    try{ await navigator.share({title:'Antonio Dental Tech', text: texto}); }
-    catch(e){ /* usuário cancelou */ }
-  } else {
-    imprimirNotaA4();
-  }
-}
-
-/* ==================== BACKUP / RESTAURAÇÃO ==================== */
-function mostrarInfoBackup(){
-  const el = document.getElementById('backupInfo');
-  const ultimo = localStorage.getItem('fc_ultimo_backup');
-  el.textContent = ultimo ? ('Último backup: ' + ultimo) : 'Nenhum backup feito ainda neste aparelho.';
-}
-function fazerBackup(){
-  const payload = {
-    app: 'Antonio Dental Tech',
-    versao: 1,
-    geradoEm: new Date().toISOString(),
-    clientes: DB.clientes,
-    produtos: DB.produtos,
-    lancamentos: DB.lancamentos
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const dataArq = new Date().toISOString().slice(0,10);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `backup-antonio-dental-tech-${dataArq}.json`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-
-  const agora = hojeStr();
-  localStorage.setItem('fc_ultimo_backup', agora);
-  mostrarInfoBackup();
-}
-function restaurarBackup(event){
-  const arquivo = event.target.files[0];
-  if(!arquivo) return;
-  const leitor = new FileReader();
-  leitor.onload = function(e){
-    let dados;
-    try{
-      dados = JSON.parse(e.target.result);
-    }catch(err){
-      alert('Arquivo inválido. Escolha um arquivo de backup gerado pelo próprio app.');
-      event.target.value = '';
-      return;
+      }).join('');
     }
-    if(!dados || !Array.isArray(dados.clientes) || !Array.isArray(dados.produtos) || !Array.isArray(dados.lancamentos)){
-      alert('Este arquivo não parece ser um backup válido.');
-      event.target.value = '';
-      return;
+    function mudarQtdEdicao(produtoId, delta) {
+      const atual = editItensSelecionados[produtoId] || 0;
+      const novo = Math.max(0, atual + delta);
+      if (novo === 0) delete editItensSelecionados[produtoId];
+      else editItensSelecionados[produtoId] = novo;
+      renderListaItensEdicao();
+      atualizarTotalEdicao();
     }
-    if(!confirm('Isso vai substituir todos os dados atuais deste aparelho pelos dados do backup. Deseja continuar?')) {
-      event.target.value = '';
-      return;
+    function calcularValorEdicaoAtual() {
+      let total = 0;
+      for (const pid in editItensSelecionados) {
+        const p = DB.produtos.find(x => x.id === pid);
+        if (p) total += p.preco * editItensSelecionados[pid];
+      }
+      const avulso = parseFloat(document.getElementById('editValorAvulso').value);
+      if (!isNaN(avulso)) total += avulso;
+      return total;
     }
-    DB.clientes = dados.clientes;
-    DB.produtos = dados.produtos;
-    DB.lancamentos = dados.lancamentos;
-    salvar();
-    event.target.value = '';
-    alert('Backup restaurado com sucesso!');
+    function atualizarTotalEdicao() {
+      document.getElementById('editValorTotal').textContent = fmt(calcularValorEdicaoAtual());
+    }
+    document.getElementById('editValorAvulso').addEventListener('input', atualizarTotalEdicao);
+    function salvarEdicaoNota() {
+      const id = document.getElementById('editNotaId').value;
+      const lanc = DB.lancamentos.find(l => l.id === id);
+      if (!lanc) return;
+      const valorTotal = calcularValorEdicaoAtual();
+      const temItens = Object.keys(editItensSelecionados).length > 0;
+      const avulsoVal = parseFloat(document.getElementById('editValorAvulso').value);
+      const temAvulso = !isNaN(avulsoVal) && avulsoVal > 0;
+      if (!temItens && !temAvulso) {alert('Adicione ao menos um item ou um valor avulso.'); return;}
+
+      const itensDescricao = [];
+      for (const pid in editItensSelecionados) {
+        const p = DB.produtos.find(x => x.id === pid);
+        if (p) itensDescricao.push(`${editItensSelecionados[pid]}x ${p.nome}`);
+      }
+      const descAvulsoTxt = document.getElementById('editDescAvulso').value.trim();
+      if (temAvulso) itensDescricao.push(descAvulsoTxt || 'Valor avulso');
+
+      lanc.itens = {...editItensSelecionados};
+      lanc.avulso = temAvulso ? {valor: avulsoVal, desc: descAvulsoTxt} : null;
+      lanc.valor = valorTotal;
+      lanc.descricao = itensDescricao.join(', ') || 'Conta';
+      salvar();
+
+      fecharOverlay('ovEditarNota');
+      const c = DB.clientes.find(x => x.id === lanc.clienteId);
+      const saldoAnterior = saldoAnteriorDoLancamento(lanc);
+      renderNotaEmTela(c, lanc, saldoAnterior);
+      renderClientes();
+      renderNotas();
+      atualizarTotaisConta();
+    }
+
+    function prepararAreaImpressao() {
+      document.getElementById('printArea').innerHTML = document.getElementById('notaConteudo').innerHTML;
+    }
+    function limparModoImpressao() {
+      document.body.classList.remove('p09-print');
+    }
+    function imprimirNotaA4() {
+      limparModoImpressao();
+      prepararAreaImpressao();
+      window.print();
+    }
+    function imprimirNotaP09() {
+      prepararAreaImpressao();
+      document.body.classList.add('p09-print');
+      window.print();
+      setTimeout(limparModoImpressao, 1000);
+    }
+    window.addEventListener('afterprint', limparModoImpressao);
+    async function compartilharNota() {
+      const texto = document.getElementById('notaConteudo').innerText;
+      if (navigator.share) {
+        try {await navigator.share({title: 'Antonio Dental Tech', text: texto});}
+        catch (e) { /* usuário cancelou */}
+      } else {
+        imprimirNotaA4();
+      }
+    }
+
+    /* ==================== BACKUP / RESTAURAÇÃO ==================== */
+    function mostrarInfoBackup() {
+      const el = document.getElementById('backupInfo');
+      const ultimo = localStorage.getItem('fc_ultimo_backup');
+      el.textContent = ultimo ? ('Último backup: ' + ultimo) : 'Nenhum backup feito ainda neste aparelho.';
+    }
+    function fazerBackup() {
+      const payload = {
+        app: 'Antonio Dental Tech',
+        versao: 1,
+        geradoEm: new Date().toISOString(),
+        clientes: DB.clientes,
+        produtos: DB.produtos,
+        lancamentos: DB.lancamentos
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const dataArq = new Date().toISOString().slice(0, 10);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `backup-antonio-dental-tech-${dataArq}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      const agora = hojeStr();
+      localStorage.setItem('fc_ultimo_backup', agora);
+      mostrarInfoBackup();
+    }
+    function restaurarBackup(event) {
+      const arquivo = event.target.files[0];
+      if (!arquivo) return;
+      const leitor = new FileReader();
+      leitor.onload = function (e) {
+        let dados;
+        try {
+          dados = JSON.parse(e.target.result);
+        } catch (err) {
+          alert('Arquivo inválido. Escolha um arquivo de backup gerado pelo próprio app.');
+          event.target.value = '';
+          return;
+        }
+        if (!dados || !Array.isArray(dados.clientes) || !Array.isArray(dados.produtos) || !Array.isArray(dados.lancamentos)) {
+          alert('Este arquivo não parece ser um backup válido.');
+          event.target.value = '';
+          return;
+        }
+        if (!confirm('Isso vai substituir todos os dados atuais deste aparelho pelos dados do backup. Deseja continuar?')) {
+          event.target.value = '';
+          return;
+        }
+        DB.clientes = dados.clientes;
+        DB.produtos = dados.produtos;
+        DB.lancamentos = dados.lancamentos;
+        salvar();
+        event.target.value = '';
+        alert('Backup restaurado com sucesso!');
+        popularSelectClientes();
+        renderClientes();
+        renderProdutos();
+        renderNotas();
+        mostrarInfoBackup();
+        trocarTab('clientes');
+      };
+      leitor.readAsText(arquivo);
+    }
+
+    /* ==================== INIT ==================== */
     popularSelectClientes();
+    renderInicio();
     renderClientes();
-    renderProdutos();
-    renderNotas();
-    mostrarInfoBackup();
-    trocarTab('clientes');
-  };
-  leitor.readAsText(arquivo);
-}
 
-/* ==================== INIT ==================== */
-popularSelectClientes();
-renderInicio();
-renderClientes();
-
-if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  });
-}
-</script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => { });
+      });
+    }
+  </script>
 </body>
+
 </html>
