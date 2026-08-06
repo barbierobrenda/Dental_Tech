@@ -440,6 +440,48 @@
       font-weight: 700;
     }
 
+    .avulso-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .avulso-row input[type="text"] {
+      flex: 1.5;
+    }
+
+    .avulso-row input[type="number"] {
+      flex: 1;
+      font-family: var(--mono);
+    }
+
+    .avulso-row .avulso-remove {
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--rust);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .avulso-add {
+      margin-top: 10px;
+      background: none;
+      border: 1px dashed var(--line);
+      border-radius: 3px;
+      padding: 10px;
+      width: 100%;
+      font-size: 13.5px;
+      color: var(--slate);
+      cursor: pointer;
+      font-family: var(--sans);
+    }
+
     .totals-box {
       background: #fff;
       border: 1px solid var(--line);
@@ -791,9 +833,9 @@
           <label style="margin-top:20px;">Itens (toque para adicionar)</label>
           <div id="listaItensConta"></div>
 
-          <label>Ou valor avulso (opcional)</label>
-          <input type="number" id="valorAvulso" placeholder="0,00" inputmode="decimal" step="0.01">
-          <input type="text" id="descAvulso" placeholder="Descrição (ex: frete, serviço...)" style="margin-top:8px;">
+          <label>Valores avulsos (opcional)</label>
+          <div id="listaAvulsosConta"></div>
+          <button type="button" class="avulso-add" onclick="adicionarAvulsoConta()">+ Adicionar valor avulso</button>
 
           <div class="totals-box">
             <div class="row"><span>Débito anterior</span><span id="tSaldoAnterior">R$ 0,00</span></div>
@@ -982,9 +1024,9 @@
       <label>Itens (toque para ajustar)</label>
       <div id="listaItensEdicao"></div>
 
-      <label>Ou valor avulso (opcional)</label>
-      <input type="number" id="editValorAvulso" placeholder="0,00" inputmode="decimal" step="0.01">
-      <input type="text" id="editDescAvulso" placeholder="Descrição (ex: frete, serviço...)" style="margin-top:8px;">
+      <label>Valores avulsos (opcional)</label>
+      <div id="listaAvulsosEdicao"></div>
+      <button type="button" class="avulso-add" onclick="adicionarAvulsoEdicao()">+ Adicionar valor avulso</button>
 
       <div class="totals-box">
         <div class="row final"><span>Novo valor da nota</span><span class="val" id="editValorTotal">R$ 0,00</span></div>
@@ -1290,10 +1332,10 @@
       document.getElementById('contaCorpo').style.display = tem ? 'block' : 'none';
       if (!tem) return;
       renderListaItensConta();
+      renderListaAvulsosConta();
       atualizarTotaisConta();
     }
     document.getElementById('selCliente').addEventListener('change', atualizarTotaisConta);
-    document.getElementById('valorAvulso').addEventListener('input', atualizarTotaisConta);
 
     function renderListaItensConta() {
       const el = document.getElementById('listaItensConta');
@@ -1322,14 +1364,38 @@
       renderListaItensConta();
       atualizarTotaisConta();
     }
+    let contaAvulsos = [];
+    function adicionarAvulsoConta() {
+      contaAvulsos.push({valor: '', desc: ''});
+      renderListaAvulsosConta();
+    }
+    function removerAvulsoConta(idx) {
+      contaAvulsos.splice(idx, 1);
+      renderListaAvulsosConta();
+      atualizarTotaisConta();
+    }
+    function mudarAvulsoConta(idx, campo, valor) {
+      contaAvulsos[idx][campo] = valor;
+      if (campo === 'valor') atualizarTotaisConta();
+    }
+    function renderListaAvulsosConta() {
+      const el = document.getElementById('listaAvulsosConta');
+      el.innerHTML = contaAvulsos.map((a, idx) => `<div class="avulso-row">
+      <input type="text" placeholder="Descrição (ex: frete, serviço...)" value="${escapeHtml(a.desc)}" oninput="mudarAvulsoConta(${idx}, 'desc', this.value)">
+      <input type="number" placeholder="0,00" inputmode="decimal" step="0.01" value="${a.valor}" oninput="mudarAvulsoConta(${idx}, 'valor', this.value)">
+      <button type="button" class="avulso-remove" onclick="removerAvulsoConta(${idx})">✕</button>
+    </div>`).join('');
+    }
     function calcularValorContaAtual() {
       let total = 0;
       for (const pid in contaItensSelecionados) {
         const p = DB.produtos.find(x => x.id === pid);
         if (p) total += p.preco * contaItensSelecionados[pid];
       }
-      const avulso = parseFloat(document.getElementById('valorAvulso').value);
-      if (!isNaN(avulso)) total += avulso;
+      contaAvulsos.forEach(a => {
+        const v = parseFloat(a.valor);
+        if (!isNaN(v)) total += v;
+      });
       return total;
     }
     function atualizarTotaisConta() {
@@ -1373,8 +1439,10 @@
       if (!clienteId) {alert('Selecione um cliente.'); return;}
       const valorConta = calcularValorContaAtual();
       const temItens = Object.keys(contaItensSelecionados).length > 0;
-      const avulsoVal = parseFloat(document.getElementById('valorAvulso').value);
-      const temAvulso = !isNaN(avulsoVal) && avulsoVal > 0;
+      const avulsosValidos = contaAvulsos
+        .map(a => ({valor: parseFloat(a.valor), desc: (a.desc || '').trim()}))
+        .filter(a => !isNaN(a.valor) && a.valor > 0);
+      const temAvulso = avulsosValidos.length > 0;
       if (!temItens && !temAvulso) {alert('Adicione ao menos um item ou um valor avulso.'); return;}
 
       const c = DB.clientes.find(x => x.id === clienteId);
@@ -1385,15 +1453,14 @@
         const p = DB.produtos.find(x => x.id === pid);
         if (p) itensDescricao.push(`${contaItensSelecionados[pid]}x ${p.nome}`);
       }
-      const descAvulsoTxt = document.getElementById('descAvulso').value.trim();
-      if (temAvulso) itensDescricao.push(descAvulsoTxt || 'Valor avulso');
+      avulsosValidos.forEach(a => itensDescricao.push(a.desc || 'Valor avulso'));
 
       const lanc = {
         id: uid(), clienteId, data: new Date().toISOString(), dataFormatada: hojeStr(),
         descricao: itensDescricao.join(', ') || 'Conta',
         valor: valorConta,
         itens: {...contaItensSelecionados},
-        avulso: temAvulso ? {valor: avulsoVal, desc: descAvulsoTxt} : null
+        avulsos: avulsosValidos
       };
       DB.lancamentos.push(lanc);
       salvar();
@@ -1402,8 +1469,8 @@
 
       // limpa a conta em andamento
       contaItensSelecionados = {};
-      document.getElementById('valorAvulso').value = '';
-      document.getElementById('descAvulso').value = '';
+      contaAvulsos = [];
+      renderListaAvulsosConta();
       renderListaItensConta();
       atualizarTotaisConta();
       renderClientes();
@@ -1424,13 +1491,14 @@
       <td class="val">${fmt(p.preco * qtd)}</td>
     </tr>`;
       }
-      if (lanc.avulso) {
+      const avulsosNota = lanc.avulsos || (lanc.avulso ? [lanc.avulso] : []);
+      avulsosNota.forEach(a => {
         linhasItens += `<tr>
       <td class="qtd">1x</td>
-      <td>${escapeHtml(lanc.avulso.desc || 'Valor avulso')}</td>
-      <td class="val">${fmt(lanc.avulso.valor)}</td>
+      <td>${escapeHtml(a.desc || 'Valor avulso')}</td>
+      <td class="val">${fmt(a.valor)}</td>
     </tr>`;
-      }
+      });
 
       const html = `
     <div class="nota-perf"></div>
@@ -1536,8 +1604,9 @@
       document.getElementById('editNotaId').value = lanc.id;
       document.getElementById('editNotaCliente').textContent = c ? c.nome : '';
       editItensSelecionados = {...(lanc.itens || {})};
-      document.getElementById('editValorAvulso').value = lanc.avulso ? lanc.avulso.valor : '';
-      document.getElementById('editDescAvulso').value = lanc.avulso ? (lanc.avulso.desc || '') : '';
+      const avulsosExistentes = lanc.avulsos || (lanc.avulso ? [lanc.avulso] : []);
+      editAvulsos = avulsosExistentes.map(a => ({valor: a.valor, desc: a.desc || ''}));
+      renderListaAvulsosEdicao();
       renderListaItensEdicao();
       atualizarTotalEdicao();
       fecharOverlay('ovNota');
@@ -1570,28 +1639,53 @@
       renderListaItensEdicao();
       atualizarTotalEdicao();
     }
+    let editAvulsos = [];
+    function adicionarAvulsoEdicao() {
+      editAvulsos.push({valor: '', desc: ''});
+      renderListaAvulsosEdicao();
+    }
+    function removerAvulsoEdicao(idx) {
+      editAvulsos.splice(idx, 1);
+      renderListaAvulsosEdicao();
+      atualizarTotalEdicao();
+    }
+    function mudarAvulsoEdicao(idx, campo, valor) {
+      editAvulsos[idx][campo] = valor;
+      if (campo === 'valor') atualizarTotalEdicao();
+    }
+    function renderListaAvulsosEdicao() {
+      const el = document.getElementById('listaAvulsosEdicao');
+      el.innerHTML = editAvulsos.map((a, idx) => `<div class="avulso-row">
+      <input type="text" placeholder="Descrição (ex: frete, serviço...)" value="${escapeHtml(a.desc)}" oninput="mudarAvulsoEdicao(${idx}, 'desc', this.value)">
+      <input type="number" placeholder="0,00" inputmode="decimal" step="0.01" value="${a.valor}" oninput="mudarAvulsoEdicao(${idx}, 'valor', this.value)">
+      <button type="button" class="avulso-remove" onclick="removerAvulsoEdicao(${idx})">✕</button>
+    </div>`).join('');
+    }
     function calcularValorEdicaoAtual() {
       let total = 0;
       for (const pid in editItensSelecionados) {
         const p = DB.produtos.find(x => x.id === pid);
         if (p) total += p.preco * editItensSelecionados[pid];
       }
-      const avulso = parseFloat(document.getElementById('editValorAvulso').value);
-      if (!isNaN(avulso)) total += avulso;
+      editAvulsos.forEach(a => {
+        const v = parseFloat(a.valor);
+        if (!isNaN(v)) total += v;
+      });
       return total;
     }
     function atualizarTotalEdicao() {
       document.getElementById('editValorTotal').textContent = fmt(calcularValorEdicaoAtual());
     }
-    document.getElementById('editValorAvulso').addEventListener('input', atualizarTotalEdicao);
     function salvarEdicaoNota() {
       const id = document.getElementById('editNotaId').value;
       const lanc = DB.lancamentos.find(l => l.id === id);
       if (!lanc) return;
       const valorTotal = calcularValorEdicaoAtual();
       const temItens = Object.keys(editItensSelecionados).length > 0;
-      const avulsoVal = parseFloat(document.getElementById('editValorAvulso').value);
-      const temAvulso = !isNaN(avulsoVal) && avulsoVal > 0;
+      const avulsosValidos = editAvulsos
+        .map(a => ({valor: parseFloat(a.valor), desc: (a.desc || '').trim()}))
+        .filter(a => !isNaN(a.valor) && a.valor > 0);
+      const temAvulso = avulsosValidos.length > 0;
       if (!temItens && !temAvulso) {alert('Adicione ao menos um item ou um valor avulso.'); return;}
 
       const itensDescricao = [];
@@ -1599,11 +1693,11 @@
         const p = DB.produtos.find(x => x.id === pid);
         if (p) itensDescricao.push(`${editItensSelecionados[pid]}x ${p.nome}`);
       }
-      const descAvulsoTxt = document.getElementById('editDescAvulso').value.trim();
-      if (temAvulso) itensDescricao.push(descAvulsoTxt || 'Valor avulso');
+      avulsosValidos.forEach(a => itensDescricao.push(a.desc || 'Valor avulso'));
 
       lanc.itens = {...editItensSelecionados};
-      lanc.avulso = temAvulso ? {valor: avulsoVal, desc: descAvulsoTxt} : null;
+      lanc.avulsos = avulsosValidos;
+      delete lanc.avulso;
       lanc.valor = valorTotal;
       lanc.descricao = itensDescricao.join(', ') || 'Conta';
       salvar();
