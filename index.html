@@ -650,6 +650,131 @@
       display: none;
     }
 
+    /* ETIQUETA */
+    .etq-row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .etq-card {
+      background: #fff;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      padding: 22px 20px;
+      font-family: var(--sans);
+    }
+
+    .etq-logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .etq-logo {
+      display: block;
+      width: auto;
+      max-width: 150px;
+      max-height: 54px;
+      object-fit: contain;
+    }
+
+    .etq-opcao {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .etq-opcao input {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+    }
+
+    .etq-fila {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .etq-fila-item {
+      position: relative;
+    }
+
+    .etq-remover {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 2;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: #fff;
+      color: var(--rust);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .etq-card .etq-bloco {
+      margin-bottom: 18px;
+    }
+
+    .etq-card .etq-bloco:last-child {
+      margin-bottom: 0;
+    }
+
+    .etq-card .etq-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 4px;
+    }
+
+    .etq-card .etq-nome {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.25;
+    }
+
+    .etq-card .etq-nome.etq-dest-nome {
+      font-size: 26px;
+    }
+
+    .etq-card .etq-linha {
+      font-size: 15px;
+      color: var(--text);
+      margin-top: 2px;
+    }
+
+    .etq-card .etq-cidade {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 18px;
+      margin-top: 4px;
+    }
+
+    .etq-card .etq-cidade.etq-dest-cidade {
+      font-size: 22px;
+    }
+
+    .etq-card hr {
+      border: none;
+      border-top: 2px dashed var(--line);
+      margin: 16px 0;
+    }
+
     @media print {
       body * {
         visibility: hidden;
@@ -741,6 +866,72 @@
       body.p09-print #printArea .nota .saldo-box .kv.grande {
         color: #000 !important;
         font-size: 12pt !important;
+      }
+
+      body.etiqueta-print #printArea {
+        display: block !important;
+        padding: 0 !important;
+      }
+
+      body.etiqueta-print #printArea .etq-print-grid {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6mm;
+        align-items: start;
+      }
+
+      body.etiqueta-print #printArea .etq-card {
+        width: auto !important;
+        width: 100% !important;
+        min-height: 62mm !important;
+        box-sizing: border-box !important;
+        border: 2px solid #000 !important;
+        border-radius: 0 !important;
+        padding: 7mm 10mm !important;
+        background: #fff !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      body.etiqueta-print #printArea .etq-logo-wrap {
+        margin-bottom: 4mm !important;
+      }
+
+      body.etiqueta-print #printArea .etq-logo {
+        max-width: 38mm !important;
+        max-height: 14mm !important;
+      }
+
+      body.etiqueta-print #printArea .etq-label {
+        color: #000 !important;
+        font-size: 13px !important;
+      }
+
+      body.etiqueta-print #printArea .etq-nome {
+        color: #000 !important;
+        font-size: 18px !important;
+      }
+
+      body.etiqueta-print #printArea .etq-nome.etq-dest-nome {
+        font-size: 23px !important;
+      }
+
+      body.etiqueta-print #printArea .etq-linha {
+        color: #000 !important;
+        font-size: 13px !important;
+      }
+
+      body.etiqueta-print #printArea .etq-cidade {
+        color: #000 !important;
+        font-size: 16px !important;
+      }
+
+      body.etiqueta-print #printArea .etq-cidade.etq-dest-cidade {
+        font-size: 19px !important;
+      }
+
+      body.etiqueta-print #printArea .etq-card hr {
+        border-top: 2px dashed #000 !important;
       }
     }
 
@@ -866,6 +1057,54 @@
         </div>
       </section>
 
+      <!-- ETIQUETAS DE ENVIO -->
+      <section class="screen" id="screen-etiquetas">
+        <h2 class="section-title">Etiqueta de envio</h2>
+
+        <label>Remetente</label>
+        <input type="text" id="etqRemNome" placeholder="Nome do remetente">
+        <div class="etq-row2">
+          <div>
+            <label>CPF</label>
+            <input type="text" id="etqRemCpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14" oninput="aplicarMascaraCPF(this)">
+          </div>
+          <div>
+            <label>Cidade / UF</label>
+            <input type="text" id="etqRemCidade" placeholder="Ex: Bento Gonçalves RS">
+          </div>
+        </div>
+
+        <label style="margin-top:20px;">Destinatário</label>
+        <select id="etqSelCliente" onchange="preencherDestinatarioPorCliente()">
+          <option value="">— Digitar manualmente —</option>
+        </select>
+        <input type="text" id="etqDestNome" placeholder="Nome do destinatário" style="margin-top:10px;">
+        <div class="etq-row2">
+          <div>
+            <label>CPF</label>
+            <input type="text" id="etqDestCpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14" oninput="aplicarMascaraCPF(this)">
+          </div>
+          <div>
+            <label>Cidade / UF</label>
+            <input type="text" id="etqDestCidade" placeholder="Ex: Salvador do Sul">
+          </div>
+        </div>
+
+        <label class="etq-opcao">
+          <input type="checkbox" id="etqComLogo" checked>
+          <span>Colocar logo nesta etiqueta</span>
+        </label>
+
+        <button class="btn btn-primary" style="margin-top:18px;" onclick="adicionarEtiqueta()">➕ Adicionar à folha</button>
+
+        <div id="etiquetaPreviewWrap" style="display:none; margin-top:22px;">
+          <h3 style="font-family:var(--serif); margin:0 0 4px;">Etiquetas na folha</h3>
+          <div id="etiquetaQtd" style="font-size:13px; color:var(--slate);"></div>
+          <div class="etq-fila" id="etiquetaFila"></div>
+          <button class="btn btn-primary" style="margin-top:14px;" onclick="imprimirEtiquetas()">🖨️ Imprimir folha</button>
+        </div>
+      </section>
+
       <!-- AJUSTES / BACKUP -->
       <section class="screen" id="screen-ajustes">
         <h2 class="section-title">Ajustes</h2>
@@ -913,6 +1152,9 @@
       <button class="tab-btn" data-tab="notas" onclick="trocarTab('notas')">
         <span class="ico">📋</span>Histórico
       </button>
+      <button class="tab-btn" data-tab="etiquetas" onclick="trocarTab('etiquetas')">
+        <span class="ico">🏷️</span>Etiqueta
+      </button>
       <button class="tab-btn" data-tab="ajustes" onclick="trocarTab('ajustes')">
         <span class="ico">⚙️</span>Ajustes
       </button>
@@ -931,6 +1173,10 @@
       <input type="text" id="clienteNome" placeholder="Nome completo">
       <label>Endereço</label>
       <textarea id="clienteEndereco" placeholder="Rua, número, bairro..."></textarea>
+      <label>Cidade / UF (opcional)</label>
+      <input type="text" id="clienteCidade" placeholder="Ex: Salvador do Sul RS">
+      <label>CPF (opcional)</label>
+      <input type="text" id="clienteCpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14" oninput="aplicarMascaraCPF(this)">
       <label>Telefone (opcional)</label>
       <input type="text" id="clienteTelefone" placeholder="(00) 00000-0000">
       <div class="btn-row">
@@ -1076,13 +1322,14 @@
       document.getElementById('screen-' + nome).classList.add('active');
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelector('.tab-btn[data-tab="' + nome + '"]').classList.add('active');
-      document.getElementById('fabAdd').style.display = (nome === 'conta' || nome === 'notas' || nome === 'ajustes' || nome === 'inicio') ? 'none' : 'flex';
+      document.getElementById('fabAdd').style.display = (nome === 'conta' || nome === 'notas' || nome === 'ajustes' || nome === 'inicio' || nome === 'etiquetas') ? 'none' : 'flex';
       if (nome === 'inicio') renderInicio();
       if (nome === 'clientes') renderClientes();
       if (nome === 'produtos') renderProdutos();
       if (nome === 'conta') renderContaScreen();
       if (nome === 'notas') trocarHistorico(subHistoricoAtual);
       if (nome === 'ajustes') mostrarInfoBackup();
+      if (nome === 'etiquetas') renderEtiquetasScreen();
     }
     function trocarHistorico(qual) {
       subHistoricoAtual = qual;
@@ -1182,6 +1429,8 @@
       document.getElementById('clienteId').value = '';
       document.getElementById('clienteNome').value = '';
       document.getElementById('clienteEndereco').value = '';
+      document.getElementById('clienteCidade').value = '';
+      document.getElementById('clienteCpf').value = '';
       document.getElementById('clienteTelefone').value = '';
       document.getElementById('btnExcluirCliente').style.display = 'none';
       abrirOverlay('ovCliente');
@@ -1193,6 +1442,8 @@
       const dados = {
         nome,
         endereco: document.getElementById('clienteEndereco').value.trim(),
+        cidade: document.getElementById('clienteCidade').value.trim(),
+        cpf: document.getElementById('clienteCpf').value.trim(),
         telefone: document.getElementById('clienteTelefone').value.trim(),
       };
       if (id) {
@@ -1240,6 +1491,8 @@
       document.getElementById('clienteId').value = c.id;
       document.getElementById('clienteNome').value = c.nome;
       document.getElementById('clienteEndereco').value = c.endereco || '';
+      document.getElementById('clienteCidade').value = c.cidade || '';
+      document.getElementById('clienteCpf').value = c.cpf || '';
       document.getElementById('clienteTelefone').value = c.telefone || '';
       document.getElementById('btnExcluirCliente').style.display = 'inline-flex';
       fecharOverlay('ovDetalheCliente');
@@ -1709,6 +1962,118 @@
       renderClientes();
       renderNotas();
       atualizarTotaisConta();
+    }
+
+    /* ==================== ETIQUETAS DE ENVIO ==================== */
+    function aplicarMascaraCPF(el) {
+      let v = el.value.replace(/\D/g, '').slice(0, 11);
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      el.value = v;
+    }
+    const REMETENTE_PADRAO = {
+      nome: 'Antonio Nunes Junior',
+      cpf: '623.794.020-00',
+      cidade: 'Bento Gonçalves RS',
+    };
+    function carregarRemetentePadrao() {
+      const salvo = JSON.parse(localStorage.getItem('fc_remetente') || 'null') || REMETENTE_PADRAO;
+      document.getElementById('etqRemNome').value = salvo.nome || '';
+      document.getElementById('etqRemCpf').value = salvo.cpf || '';
+      document.getElementById('etqRemCidade').value = salvo.cidade || '';
+    }
+    function salvarRemetentePadrao() {
+      localStorage.setItem('fc_remetente', JSON.stringify({
+        nome: document.getElementById('etqRemNome').value.trim(),
+        cpf: document.getElementById('etqRemCpf').value.trim(),
+        cidade: document.getElementById('etqRemCidade').value.trim(),
+      }));
+    }
+    function popularSelectClientesEtiqueta() {
+      const sel = document.getElementById('etqSelCliente');
+      const atual = sel.value;
+      sel.innerHTML = '<option value="">— Digitar manualmente —</option>' +
+        DB.clientes.map(c => `<option value="${c.id}">${escapeHtml(c.nome)}</option>`).join('');
+      if (atual) sel.value = atual;
+    }
+    function preencherDestinatarioPorCliente() {
+      const id = document.getElementById('etqSelCliente').value;
+      if (!id) return;
+      const c = DB.clientes.find(x => x.id === id);
+      if (!c) return;
+      document.getElementById('etqDestNome').value = c.nome || '';
+      document.getElementById('etqDestCpf').value = c.cpf || '';
+      document.getElementById('etqDestCidade').value = c.cidade || '';
+    }
+    function renderEtiquetasScreen() {
+      carregarRemetentePadrao();
+      popularSelectClientesEtiqueta();
+      renderFilaEtiquetas();
+    }
+    let etiquetasParaImprimir = [];
+    function montarEtiquetaHtml(etiqueta) {
+      return `
+        ${etiqueta.comLogo ? '<div class="etq-logo-wrap"><img class="etq-logo" src="logo.png" alt="Antonio Dental Tech"></div>' : ''}
+        <div class="etq-bloco">
+          <div class="etq-label">Remetente</div>
+          <div class="etq-nome">${escapeHtml(etiqueta.remNome || '—')}</div>
+          ${etiqueta.remCpf ? `<div class="etq-linha">CPF: ${escapeHtml(etiqueta.remCpf)}</div>` : ''}
+          ${etiqueta.remCidade ? `<div class="etq-linha">${escapeHtml(etiqueta.remCidade)}</div>` : ''}
+        </div>
+        <hr>
+        <div class="etq-bloco">
+          <div class="etq-label">Destinatário</div>
+          <div class="etq-nome etq-dest-nome">${escapeHtml(etiqueta.destNome)}</div>
+          ${etiqueta.destCpf ? `<div class="etq-linha">CPF: ${escapeHtml(etiqueta.destCpf)}</div>` : ''}
+          ${etiqueta.destCidade ? `<div class="etq-cidade etq-dest-cidade">${escapeHtml(etiqueta.destCidade)}</div>` : ''}
+        </div>`;
+    }
+    function adicionarEtiqueta() {
+      const remNome = document.getElementById('etqRemNome').value.trim();
+      const remCpf = document.getElementById('etqRemCpf').value.trim();
+      const remCidade = document.getElementById('etqRemCidade').value.trim();
+      const destNome = document.getElementById('etqDestNome').value.trim();
+      const destCpf = document.getElementById('etqDestCpf').value.trim();
+      const destCidade = document.getElementById('etqDestCidade').value.trim();
+      if (!destNome) {alert('Digite o nome do destinatário.'); return;}
+      salvarRemetentePadrao();
+      etiquetasParaImprimir.push({
+        id: uid(), remNome, remCpf, remCidade, destNome, destCpf, destCidade,
+        comLogo: document.getElementById('etqComLogo').checked,
+      });
+      renderFilaEtiquetas();
+      document.getElementById('etqSelCliente').value = '';
+      document.getElementById('etqDestNome').value = '';
+      document.getElementById('etqDestCpf').value = '';
+      document.getElementById('etqDestCidade').value = '';
+      document.getElementById('etiquetaPreviewWrap').scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+    function renderFilaEtiquetas() {
+      const wrap = document.getElementById('etiquetaPreviewWrap');
+      if (!wrap) return;
+      wrap.style.display = etiquetasParaImprimir.length ? 'block' : 'none';
+      document.getElementById('etiquetaQtd').textContent = etiquetasParaImprimir.length === 1
+        ? '1 etiqueta pronta para imprimir'
+        : `${etiquetasParaImprimir.length} etiquetas prontas para imprimir`;
+      document.getElementById('etiquetaFila').innerHTML = etiquetasParaImprimir.map(etiqueta => `
+        <div class="etq-fila-item">
+          <button class="etq-remover" type="button" aria-label="Remover etiqueta" onclick="removerEtiqueta('${etiqueta.id}')">×</button>
+          <div class="etq-card">${montarEtiquetaHtml(etiqueta)}</div>
+        </div>`).join('');
+    }
+    function removerEtiqueta(id) {
+      etiquetasParaImprimir = etiquetasParaImprimir.filter(etiqueta => etiqueta.id !== id);
+      renderFilaEtiquetas();
+    }
+    function imprimirEtiquetas() {
+      if (!etiquetasParaImprimir.length) {alert('Adicione pelo menos uma etiqueta à folha.'); return;}
+      limparModoImpressao();
+      document.getElementById('printArea').innerHTML = `<div class="etq-print-grid">${etiquetasParaImprimir.map(etiqueta =>
+        `<div class="etq-card">${montarEtiquetaHtml(etiqueta)}</div>`).join('')}</div>`;
+      document.body.classList.add('etiqueta-print');
+      window.print();
+      setTimeout(() => document.body.classList.remove('etiqueta-print'), 1000);
     }
 
     function prepararAreaImpressao() {
