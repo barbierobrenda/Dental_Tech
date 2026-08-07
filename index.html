@@ -2179,7 +2179,22 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => { });
+        let recarregando = false;
+
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (recarregando) return;
+          recarregando = true;
+          window.location.reload();
+        });
+
+        navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+          .then(registro => {
+            registro.update();
+
+            // Mantem o aplicativo aberto verificando novas versoes.
+            setInterval(() => registro.update(), 60 * 60 * 1000);
+          })
+          .catch(() => { });
       });
     }
   </script>

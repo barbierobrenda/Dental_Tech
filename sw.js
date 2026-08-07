@@ -1,4 +1,4 @@
-const CACHE = 'antonio-dental-tech-v7';
+const CACHE = 'antonio-dental-tech-v8';
 const FILES = ['./index.html', './manifest.json', './logo.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -16,7 +16,19 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+
+  // Sempre procura a versao mais nova na internet. Se estiver offline,
+  // usa os arquivos salvos no aparelho.
   e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
+    fetch(e.request)
+      .then(response => {
+        if (response && response.status === 200) {
+          const copia = response.clone();
+          caches.open(CACHE).then(cache => cache.put(e.request, copia));
+        }
+        return response;
+      })
+      .catch(() => caches.match(e.request))
   );
 });
