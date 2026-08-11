@@ -1,0 +1,13 @@
+
+NOVIDADES v10 - GESTAO 360
+- Ordens de servico/trabalhos com paciente, cor, datas, valor e status
+- Agenda de entregas e alertas de atrasos
+- Ficha tecnica por servico/produto
+- Baixa automatica de materiais ao marcar trabalho como Entregue
+- Custo e lucro estimados
+- Relatorios de producao, faturamento, compras e servicos mais realizados
+- Busca de historico por paciente, cliente ou servico
+- Aviso de trabalho pronto pelo WhatsApp
+- Forma de pagamento (Pix, dinheiro, cartao, transferencia, outro)
+- Dashboard com entregas, atrasos, estoque baixo e faturamento dos ultimos meses
+- Backup/restauracao inclui trabalhos e fichas tecnicas

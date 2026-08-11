@@ -3,7 +3,7 @@ ANTONIO DENTAL TECH — Controle de Contas
 
 O QUE É
 --------
-Um app para cadastrar produtos e clientes, lançar contas (fiado) e
+Um app para cadastrar produtos e clientes, controlar materiais e estoque, lançar contas (fiado) e
 gerar uma nota com débito anterior, valor da compra e débito atual,
 com nome e endereço do cliente. Funciona 100% offline — os dados
 ficam salvos no próprio tablet.
@@ -47,7 +47,7 @@ funcionando offline (os dados ficam salvos no tablet).
 
 IMPORTANTE SOBRE OS DADOS
 ---------------------------
-- Todos os dados (clientes, produtos, contas) ficam salvos DENTRO
+- Todos os dados (clientes, produtos, contas, materiais e movimentações de estoque) ficam salvos DENTRO
   do navegador daquele tablet (localStorage). Não há nuvem, não há
   backup automático em segundo plano.
 - Se limpar os dados/cache do Chrome, ou desinstalar o app, as
@@ -63,15 +63,17 @@ COMO USAR
 ----------
 1. Aba "Produtos": cadastre os produtos que você vende (nome e preço).
 2. Aba "Clientes": cadastre o cliente (nome, endereço, telefone).
-3. Aba "Nova conta": escolha o cliente, toque em + para adicionar
+3. Aba "Materiais": cadastre insumos, defina estoque mínimo e registre compras/entradas e saídas/uso.
+   O app mostra estoque atual, alerta de estoque baixo, custo médio e valor estimado em estoque.
+4. Aba "Nova conta": escolha o cliente, toque em + para adicionar
    os produtos da compra (ou digite um valor avulso), e toque em
    "Gerar nota". A nota aparece na tela com débito anterior, valor
    da compra e novo débito total.
-4. Na tela da nota, toque em "Imprimir / Salvar PDF" (abre a opção
+5. Na tela da nota, toque em "Imprimir / Salvar PDF" (abre a opção
    de salvar como PDF do Android) ou "Compartilhar" (manda direto
    por WhatsApp, se o aparelho suportar).
-5. Para registrar um pagamento do cliente (abatendo a dívida), abra
+6. Para registrar um pagamento do cliente (abatendo a dívida), abra
    o cliente na lista ou vá em "Nova conta" > "Registrar pagamento".
-6. Na aba "Ajustes", faça backup dos dados sempre que puder — isso
+7. Na aba "Ajustes", faça backup dos dados sempre que puder — isso
    gera um arquivo .json que você pode guardar e usar para restaurar
    os dados caso o aparelho seja trocado ou o app seja reinstalado.
