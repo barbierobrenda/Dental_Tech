@@ -45,3 +45,10 @@ Edita HTML, CSS, JavaScript, JSON, PHP/PHTML, TXT/Markdown, SQL, XML/SVG, YAML, 
 - Blocos `<?php ... ?>` e `<?= ... ?>` aparecem como marcadores visuais e não são executados.
 - A barra inferior do preview informa quantos blocos PHP foram encontrados.
 - Para executar PHP real (banco, sessão, includes, echo dinâmico etc.) ainda é necessário um servidor PHP.
+
+## v3.7 — Projeto/pasta completa
+- Botão Pasta abre um diretório inteiro no iPad/navegadores compatíveis.
+- Navegador de arquivos do projeto.
+- HTML detectado pelo conteúdo, mesmo com extensão errada.
+- Preview resolve CSS, JS, imagens e outros recursos relativos carregados da mesma pasta.
+- PHP/PHTML mantém preview visual; execução real de backend continua exigindo servidor PHP.
