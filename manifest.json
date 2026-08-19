@@ -1,13 +1,21 @@
 {
-  "name": "Antonio Dental Tech",
-  "short_name": "Antonio Dental",
-  "start_url": "./index.html",
+  "name": "Brenda IDE — Blue iPad Edition",
+  "short_name": "Brenda IDE",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#F6FAF9",
-  "theme_color": "#0F1412",
-  "orientation": "any",
+  "background_color": "#061326",
+  "theme_color": "#061326",
+  "description": "IDE web para HTML com preview em tempo real e integração opcional com GitHub.",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
