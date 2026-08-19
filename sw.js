@@ -1,4 +1,4 @@
-const CACHE = 'antonio-dental-tech-v24';
+const CACHE = 'antonio-dental-tech-v-natal-2026';
 const FILES = ['./index.html', './manifest.json', './logo.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

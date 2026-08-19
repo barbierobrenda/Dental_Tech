@@ -1778,6 +1778,22 @@ tbody td{
 .wa-template-v24{min-height:120px!important}
 .wa-preview-v24{margin-top:10px;padding:12px 14px;border-radius:13px;background:var(--v20-soft);white-space:pre-wrap;font-size:.88rem}
 
+
+    /* ===== Contagem regressiva para o Natal ===== */
+    .xmas-countdown{position:relative;display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 18px;padding:16px 20px;min-height:132px;border:1px solid #dfe9e5;border-radius:18px;background:linear-gradient(135deg,#f8fcfa 0%,#fff 55%,#fff8f8 100%);overflow:hidden;box-shadow:0 8px 28px rgba(25,48,41,.055)}
+    .xmas-countdown::after{content:'';position:absolute;width:170px;height:170px;border-radius:50%;right:-70px;bottom:-105px;background:rgba(217,45,48,.06)}
+    .xmas-copy{position:relative;z-index:2;min-width:0}
+    .xmas-kicker{font-size:10px;font-weight:900;letter-spacing:1.3px;color:#3d8c56;margin-bottom:5px}
+    .xmas-line{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;color:var(--text)}
+    .xmas-days{font-size:38px;line-height:1;font-weight:950;letter-spacing:-1.5px;color:#3a9d48}
+    .xmas-text{font-size:18px;font-weight:900;line-height:1.1}
+    .xmas-date{margin-top:6px;font-size:12px;color:var(--slate)}
+    .xmas-art{position:relative;z-index:1;align-self:stretch;width:185px;min-width:150px;display:flex;align-items:center;justify-content:center}
+    .xmas-art img{display:block;max-width:190px;max-height:142px;width:auto;height:auto;object-fit:contain;mix-blend-mode:multiply;transform:rotate(-2deg)}
+    html.dark-mode .xmas-countdown{border-color:#294039;background:linear-gradient(135deg,#14201c,#17241f 60%,#251919)}
+    html.dark-mode .xmas-art img{mix-blend-mode:normal;border-radius:12px}
+    @media(max-width:700px){.xmas-countdown{padding:14px 14px;min-height:112px}.xmas-art{width:120px;min-width:105px}.xmas-art img{max-width:130px;max-height:105px}.xmas-days{font-size:32px}.xmas-text{font-size:15px}}
+
 </style>
 </head>
 
@@ -1812,6 +1828,16 @@ tbody td{
               Novo trabalho
             </button>
           </div>
+        </div>
+
+
+        <div class="xmas-countdown" id="xmasCountdown" aria-label="Contagem regressiva para o Natal">
+          <div class="xmas-copy">
+            <div class="xmas-kicker">CONTAGEM REGRESSIVA 🎄</div>
+            <div class="xmas-line"><span class="xmas-days" id="xmasDays">--</span><span class="xmas-text" id="xmasText">dias para o Natal</span></div>
+            <div class="xmas-date" id="xmasDate">25 de dezembro</div>
+          </div>
+          <div class="xmas-art"><img src="grinch-natal.png" alt="Mão verde segurando uma bola de Natal"></div>
         </div>
 
         <div class="home-money-grid">
@@ -3793,6 +3819,20 @@ tbody td{
  window.resetWaTemplateV24=function(){localStorage.removeItem('dentalTech_whatsProntoMsg');loadWaTemplateV24()};
  document.addEventListener('DOMContentLoaded',()=>{waSettings();setTimeout(()=>document.getElementById('waTemplateV24')?.addEventListener('input',previewWaV24),0)});
 })();
+</script>
+<script>
+function atualizarContagemNatal(){
+  const el=document.getElementById('xmasDays');if(!el)return;
+  const agora=new Date(),hoje=new Date(agora.getFullYear(),agora.getMonth(),agora.getDate());
+  let natal=new Date(hoje.getFullYear(),11,25);
+  if(hoje>natal)natal=new Date(hoje.getFullYear()+1,11,25);
+  const dias=Math.max(0,Math.ceil((natal-hoje)/86400000));
+  el.textContent=dias;
+  const texto=document.getElementById('xmasText');
+  if(texto)texto.textContent=dias===0?'É Natal! 🎅':dias===1?'dia para o Natal':'dias para o Natal';
+  const data=document.getElementById('xmasDate');if(data)data.textContent=dias===0?'Feliz Natal! ✨':'25 de dezembro de '+natal.getFullYear();
+}
+atualizarContagemNatal();
 </script>
 </body>
 
