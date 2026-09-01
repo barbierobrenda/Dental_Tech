@@ -1886,6 +1886,7 @@ tbody td{
       <!-- CLIENTES -->
       <section class="screen" id="screen-clientes">
         <h2 class="section-title">Clientes</h2>
+        <input id="buscaCliente" placeholder="🔎 Buscar cliente, endereço, CPF ou telefone..." oninput="renderClientes()" style="margin-bottom:10px">
         <div id="listaClientes"></div>
       </section>
 
@@ -2114,7 +2115,7 @@ tbody td{
       <label>CPF / CNPJ (opcional)</label>
       <input type="text" id="clienteCpf" placeholder="000.000.000-00 ou 00.000.000/0000-00" inputmode="numeric" maxlength="18" oninput="aplicarMascaraCPF(this)">
       <label>Telefone (opcional)</label>
-      <input type="text" id="clienteTelefone" placeholder="(00) 00000-0000">
+      <input type="text" id="clienteTelefone" placeholder="(00) 00000-0000" inputmode="numeric" maxlength="15" oninput="aplicarMascaraTelefone(this)">
       <div class="btn-row">
         <button class="btn btn-ghost" id="btnExcluirCliente" style="display:none;"
           onclick="excluirClienteAtual()">Excluir</button>
@@ -2370,7 +2371,7 @@ tbody td{
       localStorage.setItem('fc_fichas', JSON.stringify(DB.fichas));
     }
     function uid() {return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);}
-    function fmt(v) {return 'R$ ' + (Math.round(v * 100) / 100).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});}
+    function fmt(v) {return 'R$ ' + (Math.round(v * 100) / 100).toFixed(2).replace('.', ',');}
     function hojeStr() {
       const d = new Date();
       return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'});
@@ -2663,7 +2664,15 @@ tbody td{
         el.innerHTML = '<div class="empty-state"><div class="glyph">👤</div><p>Nenhum cliente cadastrado ainda.<br>Toque no + para adicionar.</p></div>';
         return;
       }
-      el.innerHTML = DB.clientes.map(c => {
+      const q = (document.getElementById('buscaCliente')?.value || '').toLowerCase();
+      const lista = !q ? DB.clientes : DB.clientes.filter(c =>
+        [c.nome, c.endereco, c.cpf, c.telefone].join(' ').toLowerCase().includes(q)
+      );
+      if (lista.length === 0) {
+        el.innerHTML = '<div class="empty-state"><div class="glyph">🔎</div><p>Nenhum cliente encontrado.</p></div>';
+        return;
+      }
+      el.innerHTML = lista.map(c => {
         const saldo = saldoCliente(c.id);
         const recebido = totalRecebidoCliente(c.id);
         const cls = saldo > 0.004 ? 'devendo' : 'quitado';
@@ -2798,25 +2807,24 @@ tbody td{
       doc.line(margem, y, largura - margem, y);
       y += 8;
 
-      const colDesc = margem + 32;
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
       doc.text('Data', margem, y);
-      doc.text('Descrição', colDesc, y);
+      doc.text('Descrição', margem + 25, y);
       doc.text('Valor', largura - margem, y, {align: 'right'});
       y += 6;
       doc.setFont('helvetica', 'normal');
 
       let totalLancado = 0, totalPago = 0;
       lancsMes.forEach(l => {
-        const dataFmt = formatarDataBR((l.data || '').slice(0, 10));
+        const dataFmt = l.dataFormatada || formatarDataBR((l.data || '').slice(0, 10));
         const valorFmt = (l.valor >= 0 ? '+' : '') + fmt(l.valor);
         if (l.valor >= 0) totalLancado += l.valor; else totalPago += -l.valor;
-        const descLinhas = doc.splitTextToSize(l.descricao || '', largura - margem - colDesc - 25);
+        const descLinhas = doc.splitTextToSize(l.descricao || '', 95);
         const alturaLinha = 6 * descLinhas.length;
         if (y + alturaLinha > alturaMax) { doc.addPage(); y = 20; }
         doc.text(dataFmt, margem, y);
-        doc.text(descLinhas, colDesc, y);
+        doc.text(descLinhas, margem + 25, y);
         doc.text(valorFmt, largura - margem, y, {align: 'right'});
         y += alturaLinha;
       });
@@ -3362,6 +3370,26 @@ tbody td{
         v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
         v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
         v = v.replace(/(\d{4})(\d)/, '$1-$2');
+      }
+
+      el.value = v;
+    }
+
+    function aplicarMascaraTelefone(el) {
+      let v = el.value.replace(/\D/g, '').slice(0, 11);
+
+      if (v.length > 10) {
+        // Celular: (00) 00000-0000
+        v = v.replace(/^(\d{2})(\d)/, '($1) $2');
+        v = v.replace(/(\d{5})(\d{1,4})$/, '$1-$2');
+      } else if (v.length > 5) {
+        // Fixo: (00) 0000-0000
+        v = v.replace(/^(\d{2})(\d)/, '($1) $2');
+        v = v.replace(/(\d{4})(\d{1,4})$/, '$1-$2');
+      } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d)/, '($1) $2');
+      } else if (v.length > 0) {
+        v = v.replace(/^(\d*)/, '($1');
       }
 
       el.value = v;
