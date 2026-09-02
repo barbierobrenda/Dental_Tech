@@ -2753,19 +2753,14 @@ tbody td{
       }
 
       const agora = new Date();
-      const mesRef = agora.getMonth();
-      const anoRef = agora.getFullYear();
       const lancsMes = DB.lancamentos
         .filter(l => l.clienteId === c.id)
-        .filter(l => { const d = new Date(l.data); return d.getMonth() === mesRef && d.getFullYear() === anoRef; })
         .sort((a, b) => (a.data || '').localeCompare(b.data || ''));
 
       if (!lancsMes.length) {
-        avisoApp('Este cliente não tem lançamentos no mês atual.');
+        avisoApp('Este cliente não tem lançamentos.');
         return;
       }
-
-      const nomeMes = agora.toLocaleDateString('pt-BR', {month: 'long', year: 'numeric'});
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({unit: 'mm', format: 'a4'});
       const margem = 15;
@@ -2779,7 +2774,7 @@ tbody td{
       y += 7;
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(11);
-      doc.text(`Histórico de ${nomeMes}`, margem, y);
+      doc.text('Histórico completo', margem, y);
       y += 10;
 
       doc.setFont('helvetica', 'bold');
@@ -2800,22 +2795,24 @@ tbody td{
 
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
+      const colDescricao = margem + 30;
       doc.text('Data', margem, y);
-      doc.text('Descrição', margem + 25, y);
+      doc.text('Descrição', colDescricao, y);
       doc.text('Valor', largura - margem, y, {align: 'right'});
       y += 6;
       doc.setFont('helvetica', 'normal');
 
       let totalLancado = 0, totalPago = 0;
       lancsMes.forEach(l => {
-        const dataFmt = l.dataFormatada || formatarDataBR((l.data || '').slice(0, 10));
+        const dataCompleta = l.dataFormatada || formatarDataBR((l.data || '').slice(0, 10));
+        const dataFmt = dataCompleta.split(' às ')[0];
         const valorFmt = (l.valor >= 0 ? '+' : '') + fmt(l.valor);
         if (l.valor >= 0) totalLancado += l.valor; else totalPago += -l.valor;
-        const descLinhas = doc.splitTextToSize(l.descricao || '', 95);
-        const alturaLinha = 6 * descLinhas.length;
+        const descLinhas = doc.splitTextToSize(l.descricao || '', 90);
+        const alturaLinha = Math.max(6 * descLinhas.length, 6);
         if (y + alturaLinha > alturaMax) { doc.addPage(); y = 20; }
         doc.text(dataFmt, margem, y);
-        doc.text(descLinhas, margem + 25, y);
+        doc.text(descLinhas, colDescricao, y);
         doc.text(valorFmt, largura - margem, y, {align: 'right'});
         y += alturaLinha;
       });
@@ -2828,8 +2825,8 @@ tbody td{
 
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
-      doc.text(`Total lançado no mês: ${fmt(totalLancado)}`, margem, y); y += 6;
-      doc.text(`Total pago no mês: ${fmt(totalPago)}`, margem, y); y += 6;
+      doc.text(`Total lançado: ${fmt(totalLancado)}`, margem, y); y += 6;
+      doc.text(`Total pago: ${fmt(totalPago)}`, margem, y); y += 6;
       doc.text(`Saldo devedor atual: ${fmt(saldoCliente(c.id))}`, margem, y); y += 10;
 
       doc.setFont('helvetica', 'normal');
@@ -2837,9 +2834,9 @@ tbody td{
       doc.setTextColor(140);
       doc.text('Gerado em ' + hojeStr() + ' pelo Antonio Dental Tech', margem, y);
 
-      const nomeArquivo = `historico-${(c.nome || 'cliente').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${anoRef}-${String(mesRef + 1).padStart(2, '0')}.pdf`;
+      const nomeArquivo = `historico-completo-${(c.nome || 'cliente').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.pdf`;
       const pdfBlob = doc.output('blob');
-      const textoWhats = `Olá, ${c.nome}! Segue o histórico de ${nomeMes}. Qualquer dúvida, estou à disposição!`;
+      const textoWhats = `Olá, ${c.nome}! Segue o histórico completo. Qualquer dúvida, estou à disposição!`;
 
       let arquivo = null;
       try { arquivo = new File([pdfBlob], nomeArquivo, {type: 'application/pdf'}); } catch (e) { /* File API indisponível */ }
