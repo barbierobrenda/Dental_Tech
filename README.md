@@ -28,12 +28,27 @@ Envie todos os arquivos deste ZIP para um repositório e habilite Settings → P
 - Rodapé e safe area do iPad em azul escuro, sem faixa branca.
 - Mantém GitHub, backup manual, preview e atualização.
 
-## v4.0 — Abas multi-arquivo
-- **Abas**: edite vários arquivos (HTML, CSS, JS, JSON, Markdown, TXT) ao mesmo tempo, com criação, fechamento e renomeação (duplo clique no nome da aba) de arquivos.
-- **Preview combinado**: o preview localiza automaticamente o `index.html` (ou o HTML aberto) e injeta os `<link rel="stylesheet">` e `<script src="...">` referenciados, desde que os arquivos estejam abertos em outras abas — assim dá pra trabalhar com `index.html` + `style.css` + `script.js` como um projeto real.
-- **Configurações** (ícone ⚙ na barra lateral): tema, tamanho da fonte do editor, tamanho da tabulação, quebra de linha automática, atraso do preview ao vivo, atalho para o GitHub e opção de limpar todos os arquivos da sessão.
-- **Persistência de sessão**: o projeto inteiro (todas as abas) é preservado ao usar "Atualizar" ou recarregar a aba, incluindo os metadados de arquivos abertos do GitHub (repositório/branch/caminho/sha) para permitir novos commits.
-- **Backup/restauração de projeto**: "Backup" agora baixa todos os arquivos abertos num único `.json`; abrir esse mesmo `.json` pelo botão "Abrir" restaura o projeto completo.
-- **Baixar arquivo atual**: novo botão para baixar só o arquivo da aba ativa, no formato correto.
-- **GitHub por aba**: cada aba aberta do GitHub guarda seu próprio repositório/branch/caminho, então dá pra ter arquivos de repositórios diferentes abertos ao mesmo tempo e commitar cada um separadamente.
-- Aparência renovada: nova barra de abas, sombras e cantos mais suaves, indicadores coloridos por tipo de arquivo, melhor foco de acessibilidade e tela de Configurações completa.
+
+## v3.4 — Multi-linguagem
+Edita HTML, CSS, JavaScript, JSON, PHP/PHTML, TXT/Markdown, SQL, XML/SVG, YAML, INI/ENV, BAT/CMD/PowerShell, Python, Java, C/C++ e Delphi (PAS/DPR/DFM). HTML, CSS, JS e SVG têm preview quando possível. PHP é editável, mas precisa de servidor PHP para executar.
+
+## v3.5 — Preview JavaScript
+- JavaScript roda em um iframe isolado da IDE.
+- Área `#app` disponível para manipulação visual do DOM.
+- Console integrado captura `console.log`, `console.info`, `console.warn` e `console.error`.
+- Exibe erros de execução, exceções e promises rejeitadas.
+- Atualização do preview continua em tempo real.
+
+## v3.6 — Preview PHP
+- Arquivos `.php` e `.phtml` agora têm preview visual.
+- HTML, CSS e JavaScript presentes no arquivo PHP são renderizados no painel.
+- Blocos `<?php ... ?>` e `<?= ... ?>` aparecem como marcadores visuais e não são executados.
+- A barra inferior do preview informa quantos blocos PHP foram encontrados.
+- Para executar PHP real (banco, sessão, includes, echo dinâmico etc.) ainda é necessário um servidor PHP.
+
+## v3.7 — Projeto/pasta completa
+- Botão Pasta abre um diretório inteiro no iPad/navegadores compatíveis.
+- Navegador de arquivos do projeto.
+- HTML detectado pelo conteúdo, mesmo com extensão errada.
+- Preview resolve CSS, JS, imagens e outros recursos relativos carregados da mesma pasta.
+- PHP/PHTML mantém preview visual; execução real de backend continua exigindo servidor PHP.
