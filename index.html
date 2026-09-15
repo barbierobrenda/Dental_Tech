@@ -942,12 +942,6 @@
       font-size: 22px;
     }
 
-    .etq-card hr {
-      border: none;
-      border-top: 2px dashed var(--line);
-      margin: 16px 0;
-    }
-
     @media print {
       body * {
         visibility: hidden;
@@ -1103,9 +1097,6 @@
         font-size: 19px !important;
       }
 
-      body.etiqueta-print #printArea .etq-card hr {
-        border-top: 2px dashed #000 !important;
-      }
     }
 
     @page {
@@ -3431,7 +3422,6 @@ tbody td{
           ${etiqueta.remCpf ? `<div class="etq-linha">CPF: ${escapeHtml(etiqueta.remCpf)}</div>` : ''}
           ${etiqueta.remCidade ? `<div class="etq-linha">${escapeHtml(etiqueta.remCidade)}</div>` : ''}
         </div>
-        <hr>
         <div class="etq-bloco">
           <div class="etq-label">Destinatário</div>
           <div class="etq-nome etq-dest-nome">${escapeHtml(etiqueta.destNome)}</div>
