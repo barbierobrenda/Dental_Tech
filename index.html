@@ -2094,7 +2094,7 @@ tbody td{
               <option value="">Selecione um cliente</option>
             </select>
           </div>
-          <button class="btn btn-ghost pdf-download-btn" onclick="baixarRelatorioMensalPdf()" title="Baixar o relatório mensal em PDF do cliente selecionado">⬇ PDF do cliente</button>
+          <button class="wa-btn" onclick="baixarRelatorioMensalPdf()" title="Gerar o PDF do relatório e compartilhar pelo WhatsApp">📲 Enviar PDF no WhatsApp</button>
         </div>
         <div class="report-summary">
           <div class="report-kpi"><div class="label">Falta receber</div><div class="value" id="relTotalPendente">R$ 0,00</div></div>
@@ -3990,7 +3990,7 @@ tbody td{
       return {mes, clienteId, cliente, itens};
     }
 
-    function baixarRelatorioMensalPdf() {
+    async function baixarRelatorioMensalPdf() {
       if (typeof window.jspdf === 'undefined') {
         avisoApp('Não foi possível carregar o gerador de PDF. Verifique sua internet e tente novamente.');
         return;
@@ -4102,8 +4102,47 @@ tbody td{
 
       const nomeSeguro = String(cliente.nome || 'cliente').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'cliente';
       const nomeArquivo = `relatorio-${nomeSeguro}-${mes}.pdf`;
-      doc.save(nomeArquivo);
-      avisoApp('PDF do cliente baixado.', 'PDF pronto');
+      const pdfBlob = doc.output('blob');
+      const textoWhats = `Olá, ${cliente.nome}! Segue o relatório de ${nomeMes}, com os valores que ainda estão pendentes. Total: ${fmt(total)}.`;
+
+      // Em celular/tablet/PWA, compartilha o próprio PDF pelo menu nativo.
+      // Assim o WhatsApp recebe o arquivo já anexado quando ele é escolhido.
+      let arquivo = null;
+      try { arquivo = new File([pdfBlob], nomeArquivo, {type:'application/pdf'}); } catch (e) { /* File API indisponível */ }
+
+      if (arquivo && navigator.canShare && navigator.canShare({files:[arquivo]})) {
+        try {
+          await navigator.share({
+            files:[arquivo],
+            title:`Relatório - ${cliente.nome}`,
+            text:textoWhats
+          });
+          return;
+        } catch (e) {
+          if (e && e.name === 'AbortError') return;
+        }
+      }
+
+      // Navegadores que não aceitam compartilhar arquivo direto:
+      // baixa o PDF e abre a conversa do cliente no WhatsApp com a mensagem pronta.
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = nomeArquivo;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+      let tel = (cliente.telefone || '').replace(/\D/g, '');
+      if (tel && !tel.startsWith('55')) tel = '55' + tel;
+
+      if (tel) {
+        avisoApp('O PDF foi preparado. No WhatsApp, anexe o arquivo baixado caso o navegador não tenha enviado ele automaticamente.', 'Abrindo WhatsApp');
+        window.open(`https://wa.me/${tel}?text=${encodeURIComponent(textoWhats)}`, '_blank');
+      } else {
+        avisoApp('O PDF foi baixado, mas este cliente não tem telefone cadastrado. Cadastre o WhatsApp do cliente para abrir a conversa automaticamente.', 'PDF pronto');
+      }
     }
 
     function renderRelatorioMensal() {
