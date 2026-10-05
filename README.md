@@ -7,7 +7,7 @@ Aplicativo de controle de contas para laboratório de prótese dental. Funciona 
 - Lançamento de contas, notas com saldo anterior e pagamentos
 - Trabalhos (ordens de serviço), agenda de entregas e aviso de pronto por WhatsApp
 - Relatório mensal em PDF por cliente
-- Etiqueta de envio (acessada pela aba Clientes)
+- Etiqueta de envio (aba Etiquetas)
 - Backup em arquivo `.json`, backup automático interno e restauração
 
 ## Instalação

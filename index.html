@@ -1829,9 +1829,6 @@ tbody td{
     @media(max-width:980px){.year-overview{grid-template-columns:1fr}.dates-card{min-height:auto}}
     @media(max-width:700px){.xmas-countdown{padding:14px 14px;min-height:112px}.xmas-art{width:120px;min-width:105px}.xmas-art img{max-width:130px;max-height:105px}.xmas-days{font-size:32px}.xmas-text{font-size:15px}.dates-card{padding:13px}.date-row{grid-template-columns:44px minmax(0,1fr) auto;padding:7px}.date-name{font-size:11px}.date-left{font-size:9px}}
 
-#screen-conta > .seg-ctrl{flex-wrap:wrap}#screen-conta > .seg-ctrl .seg-btn{flex:1 1 130px}
-button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);cursor:pointer}.fluxo-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.fluxo-actions .btn{width:auto;flex:1 1 160px}.rotina-row{width:100%;font:inherit;text-align:left;cursor:pointer}.finance-summary{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
-.materiais-opcionais,.resumo-inicio{border:1px solid var(--line);border-radius:14px;padding:14px;margin:16px 0;background:var(--paper)}.materiais-opcionais summary,.resumo-inicio summary{font-weight:700;cursor:pointer}.materiais-opcionais p{font-size:12px;color:var(--slate)}.resumo-inicio[open] summary{margin-bottom:16px}.finance-status{display:inline-block;margin:5px 0 0 8px;padding:3px 7px;border:1px solid var(--line);border-radius:10px;font-size:11px;color:var(--ink)}.fluxo-proximo{margin:10px 0;font-size:12px;color:var(--slate)}
 </style>
 </head>
 
@@ -1872,49 +1869,6 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
         </div>
 
 
-        <div class="home-section-head"><div><span class="home-section-kicker">ATENÇÃO</span><h3>O que fazer agora</h3></div></div>
-        <div id="iniAvisos" class="home-alert-grid"></div>
-
-        <div class="home-section-head"><div><span class="home-section-kicker">ROTINA</span><h3>Próximas entregas</h3></div></div><div id="iniProximasEntregas"></div>
-        <details class="resumo-inicio"><summary>Ver valores e gráficos do laboratório</summary>
-        <div class="home-money-grid">
-          <div class="home-money-card accent">
-            <div class="home-card-icon"><svg viewBox="0 0 24 24"><path d="M3 7h18v10H3zM7 12h.01M17 12h.01M12 9c1.7 0 3 1.3 3 3s-1.3 3-3 3-3-1.3-3-3 1.3-3 3-3z"/></svg></div>
-            <div class="home-money-label">Total cobrado</div>
-            <div class="home-money-value" id="iniFaturado">R$ 0,00</div>
-            <div class="home-money-hint">Cobranças salvas no Financeiro</div>
-          </div>
-          <div class="home-money-card">
-            <div class="home-card-icon receive"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M5 19h14"/></svg></div>
-            <div class="home-money-label">Recebido</div>
-            <div class="home-money-value positive" id="iniRecebido">R$ 0,00</div>
-            <div class="home-money-hint">Pagamentos confirmados</div>
-          </div>
-          <div class="home-money-card">
-            <div class="home-card-icon pending"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-            <div class="home-money-label">A receber</div>
-            <div class="home-money-value pending-text" id="iniASReceber">R$ 0,00</div>
-            <div class="home-money-hint">Valores ainda pendentes</div>
-          </div>
-        </div>
-
-        <div class="home-mini-grid">
-          <div class="home-mini"><span>Clientes</span><b id="iniQtdClientes">0</b></div>
-          <div class="home-mini"><span>Com saldo aberto</span><b class="pending-text" id="iniQtdDevendo">0</b></div>
-          <div class="home-mini"><span>Em dia</span><b class="positive" id="iniQtdQuitados">0</b></div>
-        </div>
-
-        <div class="home-dashboard-grid">
-          <div class="home-panel">
-            <div class="home-panel-head"><div><span class="home-section-kicker">ÚLTIMOS 6 MESES</span><h3>Valor dos trabalhos entregues</h3></div></div>
-            <div id="iniGraficoMes" class="home-chart"></div>
-          </div>
-          <div class="home-panel">
-            <div class="home-panel-head"><div><span class="home-section-kicker">FINANCEIRO</span><h3>Maiores saldos em aberto</h3></div></div>
-            <div id="iniMaioresDevedores" class="home-debt-list"></div>
-          </div>
-        </div>
-        </details>
         <div class="year-overview" aria-label="Visão geral de datas importantes">
           <div class="xmas-countdown" id="xmasCountdown" aria-label="Contagem regressiva para o Natal">
             <div class="xmas-copy">
@@ -1937,12 +1891,51 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
           </aside>
         </div>
 
+        <div class="home-money-grid">
+          <div class="home-money-card accent">
+            <div class="home-card-icon"><svg viewBox="0 0 24 24"><path d="M3 7h18v10H3zM7 12h.01M17 12h.01M12 9c1.7 0 3 1.3 3 3s-1.3 3-3 3-3-1.3-3-3 1.3-3 3-3z"/></svg></div>
+            <div class="home-money-label">Faturamento total</div>
+            <div class="home-money-value" id="iniFaturado">R$ 0,00</div>
+            <div class="home-money-hint">Tudo que foi lançado</div>
+          </div>
+          <div class="home-money-card">
+            <div class="home-card-icon receive"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M5 19h14"/></svg></div>
+            <div class="home-money-label">Recebido</div>
+            <div class="home-money-value positive" id="iniRecebido">R$ 0,00</div>
+            <div class="home-money-hint">Pagamentos confirmados</div>
+          </div>
+          <div class="home-money-card">
+            <div class="home-card-icon pending"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <div class="home-money-label">A receber</div>
+            <div class="home-money-value pending-text" id="iniASReceber">R$ 0,00</div>
+            <div class="home-money-hint">Valores ainda pendentes</div>
+          </div>
+        </div>
+
+        <div class="home-mini-grid">
+          <div class="home-mini"><span>Clientes</span><b id="iniQtdClientes">0</b></div>
+          <div class="home-mini"><span>Com saldo aberto</span><b class="pending-text" id="iniQtdDevendo">0</b></div>
+          <div class="home-mini"><span>Em dia</span><b class="positive" id="iniQtdQuitados">0</b></div>
+        </div>
+
+        <div class="home-section-head"><div><span class="home-section-kicker">ATENÇÃO</span><h3>O que precisa de você</h3></div></div>
+        <div id="iniAvisos" class="home-alert-grid"></div>
+
+        <div class="home-dashboard-grid">
+          <div class="home-panel">
+            <div class="home-panel-head"><div><span class="home-section-kicker">ÚLTIMOS 6 MESES</span><h3>Faturamento</h3></div></div>
+            <div id="iniGraficoMes" class="home-chart"></div>
+          </div>
+          <div class="home-panel">
+            <div class="home-panel-head"><div><span class="home-section-kicker">FINANCEIRO</span><h3>Maiores saldos em aberto</h3></div></div>
+            <div id="iniMaioresDevedores" class="home-debt-list"></div>
+          </div>
+        </div>
       </section>
 
       <!-- CLIENTES -->
       <section class="screen" id="screen-clientes">
         <h2 class="section-title">Clientes</h2>
-        
         <div id="listaClientes"></div>
       </section>
 
@@ -1974,14 +1967,9 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       <section class="screen" id="screen-conta">
         <h2 class="section-title">Financeiro</h2>
         <div class="seg-ctrl">
-          <button class="seg-btn" id="segFinReceber" onclick="trocarFinanceiro('receber')">A receber</button>
-          <button class="seg-btn" id="segFinPagamento" onclick="trocarFinanceiro('pagamento')">Registrar valor recebido</button>
-          <button class="seg-btn active" id="segFinConta" onclick="trocarFinanceiro('conta')">Nova cobrança</button>
+          <button class="seg-btn active" id="segFinConta" onclick="trocarFinanceiro('conta')">Lançar conta</button>
           <button class="seg-btn" id="segFinHistorico" onclick="trocarFinanceiro('historico')">Histórico</button>
-          <button class="seg-btn" id="segFinPendencias" onclick="trocarFinanceiro('pendencias')">Pendências por mês</button>
         </div>
-        <div id="financeReceberView" style="display:none"></div>
-        <div id="financePagamentoView" style="display:none"><p>Selecione o cliente que fez o pagamento. O valor será abatido das cobranças mais antigas.</p><label for="pagamentoCliente">Cliente</label><select id="pagamentoCliente"></select><div id="pagamentoSaldo" class="ficha-box"></div><button class="btn btn-primary" style="margin-top:12px" onclick="abrirPagamentoCliente(document.getElementById('pagamentoCliente').value)">Registrar valor recebido</button></div>
         <div id="financeContaView">
         <label>Cliente</label>
         <select id="selCliente"></select>
@@ -2006,10 +1994,9 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
           </div>
 
           <div class="btn-row">
-            <button class="btn btn-ghost" onclick="abrirRegistrarPagamento()">Registrar valor recebido</button>
-            <button class="btn btn-rust" onclick="gerarNota()">Salvar cobrança e ver nota</button>
+            <button class="btn btn-ghost" onclick="abrirRegistrarPagamento()">Registrar pagamento</button>
+            <button class="btn btn-rust" onclick="gerarNota()">Gerar nota</button>
           </div>
-        </div>
         </div>
         <div id="financeHistoricoView" style="display:none;">
           <div class="seg-ctrl" style="margin-top:4px;">
@@ -2022,34 +2009,11 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
             <div id="listaPagamentos"></div>
           </div>
         </div>
-      <div id="financePendenciasView" style="display:none">
-        <h2 class="section-title">Pendências de pagamento <span style="font-family:var(--sans);font-size:12px;color:var(--slate);font-weight:400;">Só o que ainda falta receber</span></h2>
-        <div class="report-toolbar">
-          <div>
-            <label for="relMes">Mês da cobrança</label>
-            <input type="month" id="relMes" onchange="renderRelatorioMensal()">
-          </div>
-          <div>
-            <label for="relCliente">Cliente</label>
-            <select id="relCliente" onchange="renderRelatorioMensal()">
-              <option value="">Selecione um cliente</option>
-            </select>
-          </div>
-          <button class="btn btn-ghost pdf-download-btn" onclick="baixarRelatorioMensalPdf()" title="Baixar o relatório mensal em PDF do cliente selecionado">⬇ PDF do cliente</button>
-        </div>
-        <div class="report-summary">
-          <div class="report-kpi"><div class="label">Falta receber</div><div class="value" id="relTotalPendente">R$ 0,00</div></div>
-          <div class="report-kpi"><div class="label">Cobranças pendentes</div><div class="value" id="relQtdPendente">0</div></div>
-        </div>
-        <div id="relPeriodoLabel" style="font-size:12px;color:var(--slate);margin:0 0 10px;"></div>
-        <div class="report-list" id="relListaMensal"></div>
-      </div>
       </section>
 
       <!-- ETIQUETAS DE ENVIO -->
       <section class="screen" id="screen-etiquetas">
-        <button type="button" class="btn btn-ghost" style="margin-bottom:12px;" onclick="trocarTab('gestao')">← Ir para Trabalhos</button>
-        <h2 class="section-title">Etiquetas de envio</h2>
+        <h2 class="section-title">Etiqueta de envio</h2>
 
         <label>Remetente</label>
         <input type="text" id="etqRemNome" placeholder="Nome do remetente">
@@ -2103,7 +2067,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
           <div class="gest-kpi"><div class="n" id="gHoje">0</div><div class="l">Entregas hoje</div></div>
           <div class="gest-kpi"><div class="n" id="gAtrasados">0</div><div class="l">Atrasados</div></div>
           <div class="gest-kpi"><div class="n" id="gProducao">0</div><div class="l">Fazendo agora</div></div>
-          <div class="gest-kpi"><div class="n" id="gLucro">R$ 0</div><div class="l">Resultado estimado</div></div>
+          <div class="gest-kpi"><div class="n" id="gLucro">R$ 0</div><div class="l">Lucro</div></div>
         </div>
         <button class="btn btn-primary" onclick="abrirNovoTrabalho()" style="margin:12px 0 10px;max-width:240px;">＋ Novo trabalho</button>
         <div class="seg-ctrl">
@@ -2111,13 +2075,34 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
           <button class="seg-btn" id="segGAgenda" onclick="trocarGestaoView('agenda')">Agenda</button>
           <button class="seg-btn" id="segGRel" onclick="trocarGestaoView('relatorios')">Resumo</button>
         </div>
-        <div id="gestTrabalhos"><label for="filtroTrabalho">Mostrar</label><select id="filtroTrabalho" onchange="renderTrabalhos()" style="margin-bottom:10px"><option value="abertos">Trabalhos em aberto</option><option value="hoje">Entregas de hoje</option><option value="atrasados">Atrasados</option><option value="prontos">Prontos para entregar</option><option value="entregues">Entregues</option><option value="todos">Todos os trabalhos</option></select><input id="buscaTrabalho" placeholder="🔎 Buscar paciente, cliente ou serviço..." oninput="renderTrabalhos()" style="margin-bottom:10px"><div id="listaTrabalhos"></div></div>
+        <div id="gestTrabalhos"><input id="buscaTrabalho" placeholder="🔎 Buscar paciente, cliente ou serviço..." oninput="renderTrabalhos()" style="margin-bottom:10px"><div id="listaTrabalhos"></div></div>
         <div id="gestAgenda" style="display:none"><div id="listaAgenda"></div></div>
         <div id="gestRelatorios" style="display:none"><div id="relatoriosConteudo"></div></div>
       </section>
 
       <!-- RELATÓRIOS MENSAIS -->
-
+      <section class="screen" id="screen-relatorios">
+        <h2 class="section-title">Relatórios <span style="font-family:var(--sans);font-size:12px;color:var(--slate);font-weight:400;">Só o que ainda falta receber</span></h2>
+        <div class="report-toolbar">
+          <div>
+            <label for="relMes">Mês do relatório</label>
+            <input type="month" id="relMes" onchange="renderRelatorioMensal()">
+          </div>
+          <div>
+            <label for="relCliente">Cliente</label>
+            <select id="relCliente" onchange="renderRelatorioMensal()">
+              <option value="">Selecione um cliente</option>
+            </select>
+          </div>
+          <button class="btn btn-ghost pdf-download-btn" onclick="baixarRelatorioMensalPdf()" title="Baixar o relatório mensal em PDF do cliente selecionado">⬇ PDF do cliente</button>
+        </div>
+        <div class="report-summary">
+          <div class="report-kpi"><div class="label">Falta receber</div><div class="value" id="relTotalPendente">R$ 0,00</div></div>
+          <div class="report-kpi"><div class="label">Cobranças pendentes</div><div class="value" id="relQtdPendente">0</div></div>
+        </div>
+        <div id="relPeriodoLabel" style="font-size:12px;color:var(--slate);margin:0 0 10px;"></div>
+        <div class="report-list" id="relListaMensal"></div>
+      </section>
 
       <!-- AJUSTES / BACKUP -->
       <section class="screen" id="screen-ajustes">
@@ -2158,7 +2143,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
 
     </main>
 
-    <nav class="tabbar" aria-label="Menu principal">
+    <nav class="tabbar">
       <button class="tab-btn active" data-tab="inicio" onclick="trocarTab('inicio')">
         <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.8v24h14V9.8"/><path d="M9 21v-7h6v7"/></svg></span><span>Início</span>
       </button>
@@ -2168,17 +2153,20 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       <button class="tab-btn" data-tab="clientes" onclick="trocarTab('clientes')">
         <span class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 19c.6-3.4 2.4-5 5.5-5s4.9 1.6 5.5 5"/><circle cx="17" cy="9" r="2.3"/><path d="M15.5 14.5c2.8-.5 4.7.8 5 3.5"/></svg></span><span>Clientes</span>
       </button>
-      <button class="tab-btn" data-tab="conta" onclick="trocarTab('conta')">
-        <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M3 10h18"/><path d="M7 15h3"/></svg></span><span>Financeiro</span>
-      </button>
-      <button class="tab-btn" data-tab="etiquetas" onclick="trocarTab('etiquetas')">
-        <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 3h8l10 10-8 8L3 11V3Z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></span><span>Etiquetas de envio</span>
-      </button>
       <button class="tab-btn" data-tab="produtos" onclick="trocarTab('produtos')">
         <span class="ico"><svg viewBox="0 0 24 24"><path d="M8.2 3.5c1.6 0 2.4 1.2 3.8 1.2s2.2-1.2 3.8-1.2c2.4 0 4.2 2 4.2 4.7 0 3-1.3 4.4-2 6.8-.7 2.6-1.3 5.5-3 5.5-1.4 0-1.5-3.7-3-3.7s-1.6 3.7-3 3.7c-1.7 0-2.3-2.9-3-5.5-.7-2.4-2-3.8-2-6.8 0-2.7 1.8-4.7 4.2-4.7Z"/></svg></span><span>Serviços</span>
       </button>
       <button class="tab-btn" data-tab="materiais" onclick="trocarTab('materiais')">
         <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z"/><path d="M4 12l8 4.5 8-4.5M4 16.5 12 21l8-4.5"/></svg></span><span>Materiais</span>
+      </button>
+      <button class="tab-btn" data-tab="conta" onclick="trocarTab('conta')">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M3 10h18"/><path d="M7 15h3"/></svg></span><span>Financeiro</span>
+      </button>
+      <button class="tab-btn" data-tab="etiquetas" onclick="trocarTab('etiquetas')">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M20 13 13 20 4 11V4h7l9 9Z"/><circle cx="8.5" cy="8.5" r="1.3"/></svg></span><span>Etiquetas</span>
+      </button>
+      <button class="tab-btn" data-tab="relatorios" onclick="trocarTab('relatorios')">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></span><span>Relatórios</span>
       </button>
       <button class="tab-btn" data-tab="ajustes" onclick="trocarTab('ajustes')">
         <span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v24h-4v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3.1 14H3v-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.5V3h4v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.1v4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg></span><span>Ajustes</span>
@@ -2235,7 +2223,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       </div>
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="editarClienteAtual()">Editar cadastro</button>
-        <button class="btn btn-primary" onclick="lancarContaParaClienteAtual()">Nova cobrança</button>
+        <button class="btn btn-primary" onclick="lancarContaParaClienteAtual()">Lançar conta</button>
       </div>
     </div>
   </div>
@@ -2262,7 +2250,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
   <div class="overlay" id="ovPagamento">
     <div class="sheet">
       <button class="sheet-close" onclick="fecharOverlay('ovPagamento')">✕</button>
-      <div class="sheet-title">Registrar valor recebido</div>
+      <div class="sheet-title">Registrar pagamento</div>
       <div style="color:var(--slate); font-size:13px; margin-bottom:6px;" id="pagCliente"></div>
       <label>Valor pago (R$)</label>
       <input type="number" id="pagValor" placeholder="0,00" inputmode="decimal" step="0.01"><label>Forma de pagamento</label><select id="pagMetodo"><option>Pix</option><option>Dinheiro</option><option>Cartão</option><option>Transferência</option><option>Outro</option></select>
@@ -2358,23 +2346,22 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
     <div class="sheet-handle"></div><div class="sheet-title" id="tituloTrabalho">Novo trabalho</div>
     <input type="hidden" id="trabId">
 
-    <div class="ficha-box" style="margin-top:0"><b>1. Dados do trabalho</b><br><span style="color:var(--slate)">Preencha o básico do trabalho.</span></div>
+    <div class="ficha-box" style="margin-top:0"><b>1. Quem e o que será feito</b><br><span style="color:var(--slate)">Preencha o básico do trabalho.</span></div>
     <label>Cliente / dentista</label><select id="trabCliente"></select>
     <label>Paciente</label><input id="trabPaciente" placeholder="Nome do paciente">
     <label>Serviço</label><input id="trabServico" list="listaServicos" placeholder="Digite qualquer serviço" oninput="atualizarFichaTrabalho()"><datalist id="listaServicos"></datalist><input type="hidden" id="trabProduto">
-    <div class="etq-row2"><div><label>Cor (opcional)</label><input id="trabCor" placeholder="Ex: A2"></div><div><label>Preço do trabalho (R$)</label><input id="trabValor" type="number" step="0.01" oninput="atualizarResumoCustoTrabalho()"></div></div>
+    <div class="etq-row2"><div><label>Cor (opcional)</label><input id="trabCor" placeholder="Ex: A2"></div><div><label>Valor cobrado (R$)</label><input id="trabValor" type="number" step="0.01" oninput="atualizarResumoCustoTrabalho()"></div></div>
 
-    <div class="ficha-box"><b>2. Produção e entrega</b></div>
-    <div class="etq-row2"><div><label>Recebido em</label><input id="trabEntrada" type="date"></div><div><label>Entregar em</label><input id="trabEntrega" type="date"></div></div>
-    <label>Andamento da produção</label><select id="trabStatus"><option>Recebido</option><option>Em produção</option><option value="Pronto">Pronto para entregar</option><option>Entregue</option></select>
-    <label>Observações (opcional)</label><textarea id="trabObs" placeholder="Detalhes importantes..."></textarea>
-    <details class="materiais-opcionais" id="trabMateriaisDetalhes"><summary>Materiais e custos (opcional)</summary><p>Informe os materiais se quiser calcular custos e controlar o estoque.</p>    <div id="trabMateriais"></div>
+    <div class="ficha-box"><b>2. Materiais usados</b><br><span style="color:var(--slate)">Opcional. Serve para calcular o custo e dar baixa no estoque.</span></div>
+    <div id="trabMateriais"></div>
     <button type="button" class="avulso-add" onclick="addTrabalhoMaterial()">+ Adicionar material</button>
     <label>Outros custos (R$)</label><input id="trabOutrosCustos" type="number" min="0" step="0.01" value="0" placeholder="Ex: frete, terceirização..." oninput="atualizarResumoCustoTrabalho()">
     <div id="trabResumoCusto" class="totals-box" style="margin-top:10px"></div>
 
-</details>
-    <div class="ficha-box"><b>3. Cobrança e pagamento</b><div id="trabFluxo" style="margin-top:10px"></div></div>
+    <div class="ficha-box"><b>3. Prazo e andamento</b></div>
+    <div class="etq-row2"><div><label>Recebido em</label><input id="trabEntrada" type="date"></div><div><label>Entregar em</label><input id="trabEntrega" type="date"></div></div>
+    <label>Como está?</label><select id="trabStatus"><option>Recebido</option><option>Em produção</option><option>Finalização</option><option>Pronto</option><option>Entregue</option></select>
+    <label>Observações (opcional)</label><textarea id="trabObs" placeholder="Detalhes importantes..."></textarea>
     <div class="btn-row"><button class="btn btn-ghost" id="btnExcluirTrabalho" onclick="excluirTrabalho()">Excluir</button><button class="btn btn-primary" onclick="salvarTrabalho()">Salvar trabalho</button></div>
   </div></div>
 
@@ -2501,7 +2488,6 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
     let subHistoricoAtual = 'notas'; // 'notas' | 'pagamentos'
 
     function trocarTab(nome) {
-      if(nome==='relatorios'){trocarTab('conta');trocarFinanceiro('pendencias');return;}
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       const tela = document.getElementById('screen-' + nome);
       if (tela) tela.classList.add('active');
@@ -2514,22 +2500,20 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       if (nome === 'produtos') renderProdutos();
       if (nome === 'materiais') renderMateriais();
       if (nome === 'gestao') renderGestao();
-      if (nome === 'conta') { renderContaScreen(); trocarFinanceiro('receber'); }
+      if (nome === 'conta') { renderContaScreen(); trocarFinanceiro('conta'); }
       if (nome === 'ajustes') mostrarInfoBackup();
       if (nome === 'etiquetas') renderEtiquetasScreen();
       if (nome === 'relatorios') renderRelatorioMensal();
     }
     function trocarFinanceiro(qual) {
-      const views={conta:'financeContaView',historico:'financeHistoricoView',receber:'financeReceberView',pagamento:'financePagamentoView',pendencias:'financePendenciasView'};
-      Object.entries(views).forEach(([key,id])=>document.getElementById(id).style.display=key===qual?'block':'none');
-      Object.entries({conta:'segFinConta',historico:'segFinHistorico',receber:'segFinReceber',pagamento:'segFinPagamento',pendencias:'segFinPendencias'}).forEach(([key,id])=>document.getElementById(id).classList.toggle('active',key===qual));
-      if(qual==='historico')trocarHistorico(subHistoricoAtual);
-      if(qual==='conta')renderContaScreen();
-      if(qual==='receber')renderAReceber();
-      if(qual==='pagamento')renderPagamentoClientes();
-      if(qual==='pendencias')renderRelatorioMensal();
+      const conta = qual !== 'historico';
+      document.getElementById('financeContaView').style.display = conta ? 'block' : 'none';
+      document.getElementById('financeHistoricoView').style.display = conta ? 'none' : 'block';
+      document.getElementById('segFinConta').classList.toggle('active', conta);
+      document.getElementById('segFinHistorico').classList.toggle('active', !conta);
+      if (!conta) trocarHistorico(subHistoricoAtual);
+      else renderContaScreen();
     }
-
     function trocarHistorico(qual) {
       subHistoricoAtual = qual;
       document.getElementById('segNotas').classList.toggle('active', qual === 'notas');
@@ -2792,16 +2776,15 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       document.getElementById('iniQtdDevendo').textContent = devendo.length;
       document.getElementById('iniQtdQuitados').textContent = quitados;
 
-      renderRotinaInicio();
       const hoje = dataISO();
       const abertos = DB.trabalhos.filter(t => t.status !== 'Entregue');
       const atrasados = abertos.filter(t => t.entrega && t.entrega < hoje).length;
       const hojeEnt = abertos.filter(t => t.entrega === hoje).length;
-      const baixos = DB.materiais.filter(m => estoqueMaterial(m.id) <= Number(m.minimo||0)).length;
+      const baixos = DB.materiais.filter(m => Number(m.estoque||0) <= Number(m.minimo||0)).length;
       document.getElementById('iniAvisos').innerHTML = `
-        <button type="button" class="home-alert danger" onclick="abrirFilaTrabalhos('atrasados')"><span class="dot"></span><div><strong>${atrasados}</strong><small>Atrasados</small></div></button>
-        <button type="button" class="home-alert today" onclick="abrirFilaTrabalhos('hoje')"><span class="dot"></span><div><strong>${hojeEnt}</strong><small>Entregar hoje</small></div></button>
-        <button type="button" class="home-alert today" onclick="trocarTab('conta')"><span class="dot"></span><div><strong>${devendo.length}</strong><small>Pagamentos pendentes</small></div></button>`;
+        <div class="home-alert danger"><span class="dot"></span><div><strong>${atrasados}</strong><small>trabalho(s) atrasado(s)</small></div></div>
+        <div class="home-alert today"><span class="dot"></span><div><strong>${hojeEnt}</strong><small>entrega(s) para hoje</small></div></div>
+        <div class="home-alert stock"><span class="dot"></span><div><strong>${baixos}</strong><small>material(is) com estoque baixo</small></div></div>`;
       const meses=[]; for(let i=5;i>=0;i--){const d=new Date();d.setMonth(d.getMonth()-i);const k=d.toISOString().slice(0,7);const label=d.toLocaleDateString('pt-BR',{month:'short'}).replace('.','');const v=DB.trabalhos.filter(t=>t.status==='Entregue'&&(t.entrega||'').startsWith(k)).reduce((s,t)=>s+Number(t.valor||0),0);meses.push({label,v});}
       const mx=Math.max(1,...meses.map(x=>x.v));
       document.getElementById('iniGraficoMes').innerHTML=meses.map(x=>`<div class="home-chart-col"><div class="home-chart-value">${fmt(x.v)}</div><div class="home-chart-track"><div class="home-chart-bar" style="height:${Math.max(3,x.v/mx*100)}%"></div></div><div class="home-chart-label">${x.label}</div></div>`).join('');
@@ -3241,9 +3224,6 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       fecharOverlay('ovPagamento');
       atualizarTotaisConta();
       renderClientes();
-      renderInicio();
-      renderAReceber();
-      renderPagamentoClientes();
     }
 
     /* ==================== GERAR NOTA ==================== */
@@ -3791,64 +3771,9 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
     }
 
 
-    function abrirFilaTrabalhos(filtro){trocarTab('gestao');trocarGestaoView('trabalhos');document.getElementById('filtroTrabalho').value=filtro;document.getElementById('buscaTrabalho').value='';renderTrabalhos();}
-    function renderRotinaInicio(){
-      const lista=DB.trabalhos.filter(t=>t.status!=='Entregue').sort((a,b)=>(a.entrega||'9999').localeCompare(b.entrega||'9999')).slice(0,5);
-      document.getElementById('iniProximasEntregas').innerHTML=lista.length?lista.map(t=>`<button type="button" class="card rotina-row" onclick="abrirEditarTrabalho('${t.id}')"><div class="info"><div class="nome">${escapeHtml(t.paciente||'Sem paciente')} · ${escapeHtml(nomeServico(t))}</div><div class="sub">${escapeHtml(nomeCliente(t.clienteId))} · ${t.entrega?formatarDataBR(t.entrega):'Sem prazo definido'}</div></div><span class="status-pill">${escapeHtml(statusProducao(t))}</span></button>`).join(''):'<div class="ficha-box">Nenhum trabalho em aberto. Use “Novo trabalho” para começar.</div>';
-    }
-    function abrirPagamentoCliente(id){
-      if(!DB.clientes.some(c=>c.id===id)){avisoApp('Selecione um cliente.');return;}
-      document.getElementById('selCliente').value=id;abrirRegistrarPagamento();
-    }
-    function renderPagamentoClientes(){
-      const sel=document.getElementById('pagamentoCliente'),atual=sel.value;
-      sel.innerHTML='<option value="">Selecione um cliente</option>'+DB.clientes.map(c=>`<option value="${c.id}">${escapeHtml(c.nome)}</option>`).join('');
-      if(DB.clientes.some(c=>c.id===atual))sel.value=atual;
-      sel.onchange=()=>document.getElementById('pagamentoSaldo').textContent=sel.value?'Saldo do cliente: '+fmt(saldoCliente(sel.value)):'Selecione um cliente para consultar o saldo.';
-      sel.onchange();
-    }
-    function renderAReceber(){
-      const lista=DB.clientes.map(c=>({c,saldo:saldoCliente(c.id)})).filter(x=>x.saldo>0.004).sort((a,b)=>b.saldo-a.saldo);
-      document.getElementById('financeReceberView').innerHTML=`<div class="totals-box"><div class="row final"><span>Total a receber</span><b>${fmt(lista.reduce((s,x)=>r2(s+x.saldo),0))}</b></div></div><p>Valores já lançados no Financeiro. Trabalhos sem cobrança ainda não entram neste saldo.</p>`+(lista.length?lista.map(({c,saldo})=>`<div class="card"><div class="info"><div class="nome">${escapeHtml(c.nome)}</div><div class="sub">Saldo pendente: ${fmt(saldo)}</div><div class="fluxo-actions"><button class="btn btn-ghost" onclick="abrirPagamentoCliente('${c.id}')">Registrar valor recebido</button><button class="btn btn-ghost" onclick="abrirPendenciasCliente('${c.id}')">Ver cobranças</button></div></div></div>`).join(''):'<div class="empty-state"><p>Nenhum saldo pendente.</p></div>');
-    }
-    function abrirPendenciasCliente(id){trocarTab('relatorios');document.getElementById('relCliente').value=id;const primeira=cobrancasComSaldo().filter(x=>x.cliente.id===id&&x.restante>0.004).sort((a,b)=>dataLancamentoISO(a.lancamento).localeCompare(dataLancamentoISO(b.lancamento)))[0];if(primeira)document.getElementById('relMes').value=dataLancamentoISO(primeira.lancamento).slice(0,7);renderRelatorioMensal();}
-    function cobrancaTrabalho(id){return DB.lancamentos.find(l=>l.trabalhoId===id&&Number(l.valor)>0);}
-    function statusProducao(t){return t.status==='Finalização'?'Em produção':t.status==='Pronto'?'Pronto para entregar':t.status||'Recebido';}
-    function situacaoFinanceiraTrabalho(t,saldos){
-      const lanc=cobrancaTrabalho(t.id);
-      if(!lanc)return {texto:'Ainda não cobrado',restante:0};
-      const item=(saldos||cobrancasComSaldo()).find(x=>x.lancamento.id===lanc.id);
-      if(!item)return {texto:'Cobrança sem cliente cadastrado',restante:Number(lanc.valor)};
-      const restante=r2(Math.max(0,item.restante));
-      return {texto:restante<=0.004?'Pago':restante<Number(lanc.valor)-0.004?'Pagamento parcial':'Cobrado',restante};
-    }
-
-    function renderFluxoTrabalho(){
-      const id=document.getElementById('trabId').value,t=DB.trabalhos.find(x=>x.id===id),el=document.getElementById('trabFluxo');
-      if(!t){el.innerHTML='Primeiro, preencha os dados e clique em “Salvar trabalho”. Depois você poderá cobrar, registrar o valor recebido e gerar a etiqueta.';return;}
-      const lanc=cobrancaTrabalho(id),financeiro=situacaoFinanceiraTrabalho(t),saldo=saldoCliente(t.clienteId);
-      const producao=statusProducao(t);
-      let proximo=t.status==='Entregue'?'Entrega concluída.':t.status==='Pronto'?'Próximo passo: gere a etiqueta se houver envio. Depois marque como Entregue e salve.':'Próximo passo: atualize a produção. Quando terminar, escolha Pronto para entregar e salve.';
-      el.innerHTML=`<div><b>Produção:</b> ${escapeHtml(producao)}</div><div style="margin-top:5px"><b>Pagamento:</b> ${escapeHtml(financeiro.texto)}${lanc?' · Falta receber nesta cobrança: '+fmt(financeiro.restante):''}</div><div style="margin-top:5px">Saldo total do cliente: ${fmt(saldo)}</div><p class="fluxo-proximo">${proximo}</p><small>Salvar o trabalho não cria uma cobrança. Pagamentos abatem as cobranças mais antigas do cliente. Salve alterações antes de usar os botões abaixo.${lanc?' A cobrança já criada mantém seu valor original.':''}</small><div class="fluxo-actions"><button class="btn btn-ghost" onclick="cobrarTrabalhoAtual()">${lanc?'Ver cobrança':'Cobrar este trabalho'}</button><button class="btn btn-ghost" onclick="pagarTrabalhoAtual()">Registrar valor recebido</button><button class="btn btn-ghost" onclick="etiquetaTrabalhoAtual()">Gerar etiqueta de envio</button></div>`;
-    }
-
-    async function cobrarTrabalhoAtual(){
-      const id=document.getElementById('trabId').value,t=DB.trabalhos.find(x=>x.id===id);if(!t)return;
-      const existente=cobrancaTrabalho(id);
-      if(existente){const c=DB.clientes.find(c=>c.id===t.clienteId);if(!c){avisoApp('O cliente foi removido.');return;}fecharOverlay('ovTrabalho');trocarTab('conta');trocarFinanceiro('historico');renderNotas();abrirNotaHistorico(existente.id);return;}
-      if(!DB.clientes.some(c=>c.id===t.clienteId)){avisoApp('O cliente deste trabalho foi removido. Atualize e salve o trabalho.');return;}
-      if(!Number.isFinite(Number(t.valor))||Number(t.valor)<=0){avisoApp('Informe um valor maior que zero e salve o trabalho.');return;}
-      if(!(await confirmarApp('Criar cobrança de '+fmt(t.valor)+' para '+nomeCliente(t.clienteId)+'? Confira se este trabalho já foi lançado manualmente para evitar uma cobrança duplicada.','Criar cobrança do trabalho?')))return;
-      if(cobrancaTrabalho(id))return;
-      DB.lancamentos.push({id:uid(),trabalhoId:id,clienteId:t.clienteId,data:new Date().toISOString(),dataFormatada:hojeStr(),descricao:(t.paciente?t.paciente+' · ':'')+nomeServico(t),valor:r2(Number(t.valor)),itens:{},avulsos:[{desc:nomeServico(t),valor:r2(Number(t.valor))}]});
-      salvar();renderFluxoTrabalho();renderInicio();renderClientes();
-    }
-    function pagarTrabalhoAtual(){const t=DB.trabalhos.find(x=>x.id===document.getElementById('trabId').value);if(!t)return;fecharOverlay('ovTrabalho');trocarTab('conta');trocarFinanceiro('pagamento');document.getElementById('pagamentoCliente').value=t.clienteId;document.getElementById('pagamentoCliente').onchange();abrirPagamentoCliente(t.clienteId);}
-    function etiquetaTrabalhoAtual(){const t=DB.trabalhos.find(x=>x.id===document.getElementById('trabId').value);if(!t)return;if(!DB.clientes.some(c=>c.id===t.clienteId)){avisoApp('O cliente foi removido. Atualize o trabalho antes de preparar a etiqueta.');return;}fecharOverlay('ovTrabalho');trocarTab('etiquetas');document.getElementById('etqSelCliente').value=t.clienteId;preencherDestinatarioPorCliente();document.getElementById('etqDestNome').focus();}
-
     /* ==================== GESTÃO 360 / ORDENS DE SERVIÇO ==================== */
     let gestaoView='trabalhos', fichaLinhas=[], trabalhoMateriais=[];
-    const dataISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+    const dataISO=()=>new Date().toISOString().slice(0,10);
     function nomeCliente(id){const c=DB.clientes.find(x=>x.id===id);return c?c.nome:'Cliente removido';}
     function nomeProduto(id){const p=DB.produtos.find(x=>x.id===id);return p?p.nome:'';}
     function nomeServico(t){return (t&&t.servicoNome)||nomeProduto(t&&t.produtoId)||'Serviço';}
@@ -3865,7 +3790,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       trocarGestaoView(gestaoView);
     }
     function trocarGestaoView(v){gestaoView=v;['Trabalhos','Agenda','Rel'].forEach(x=>{const e=document.getElementById('segG'+x);if(e)e.classList.remove('active')});document.getElementById(v==='trabalhos'?'segGTrabalhos':v==='agenda'?'segGAgenda':'segGRel').classList.add('active');document.getElementById('gestTrabalhos').style.display=v==='trabalhos'?'block':'none';document.getElementById('gestAgenda').style.display=v==='agenda'?'block':'none';document.getElementById('gestRelatorios').style.display=v==='relatorios'?'block':'none';if(v==='trabalhos')renderTrabalhos();if(v==='agenda')renderAgenda();if(v==='relatorios')renderRelatorios();}
-    function renderTrabalhos(){const saldos=cobrancasComSaldo();const el=document.getElementById('listaTrabalhos'),hoje=dataISO();const q=(document.getElementById('buscaTrabalho')?.value||'').toLowerCase();const filtro=document.getElementById('filtroTrabalho').value;const a=[...DB.trabalhos].filter(t=>filtro==='todos'||(filtro==='abertos'&&t.status!=='Entregue')||(filtro==='hoje'&&t.status!=='Entregue'&&t.entrega===hoje)||(filtro==='atrasados'&&t.status!=='Entregue'&&t.entrega&&t.entrega<hoje)||(filtro==='prontos'&&t.status==='Pronto')||(filtro==='entregues'&&t.status==='Entregue')).filter(t=>!q||[t.paciente,nomeCliente(t.clienteId),nomeServico(t)].join(' ').toLowerCase().includes(q)).sort((x,y)=>(x.entrega||'9999').localeCompare(y.entrega||'9999'));if(!a.length){el.innerHTML='<div class="empty-state"><div class="glyph">🦷</div><p>Nenhum trabalho encontrado.<br>Confira a busca e o filtro ou cadastre um novo trabalho.</p></div>';return;}el.innerHTML=a.map(t=>{const atras=t.status!=='Entregue'&&t.entrega&&t.entrega<hoje;return `<div class="card" onclick="abrirEditarTrabalho('${t.id}')"><div class="info"><div class="nome">${escapeHtml(t.paciente||'Sem paciente')} · ${escapeHtml(nomeServico(t))}</div><div class="sub">${escapeHtml(nomeCliente(t.clienteId))} · Entrega ${t.entrega?formatarDataBR(t.entrega):'sem data'} · ${t.cor?'Cor '+escapeHtml(t.cor):''}</div><div style="margin-top:5px"><span class="status-pill ${atras?'status-atrasado':t.status==='Pronto'?'status-pronto':''}">${atras?'ATRASADO · ':''}${escapeHtml(statusProducao(t))}</span><span class="finance-status">${escapeHtml(situacaoFinanceiraTrabalho(t,saldos).texto)}</span></div></div><div style="text-align:right"><div class="valor">${fmt(Number(t.valor||0))}</div><div style="font-size:10px;color:var(--slate);margin-top:2px">custo ${fmt(custoTrabalho(t))}</div>${t.status==='Pronto'?`<button class="wa-btn" onclick="event.stopPropagation();avisarWhats('${t.id}')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9.5 9.5 0 0 0-8.2 14.3L2.5 21.5l5.3-1.3A9.5 9.5 0 1 0 12 2Zm0 17.2a7.7 7.7 0 0 1-3.9-1.1l-.3-.2-3.1.8.8-3-.2-.3A7.7 7.7 0 1 1 12 19.2Zm4.2-5.8c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1-1.3-.6-2.2-1.4-3-2.6-.2-.3 0-.4.1-.6l.5-.6c.1-.2.1-.4 0-.5l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.8.8-1.1 1.8-.7 2.9.8 2.4 2.6 4.3 4.9 5.3.9.4 2 .7 2.9.5.9-.2 1.8-.9 2.1-1.7.2-.5.2-1 0-1.1-.2-.1-.6-.3-1-.4Z"/></svg> Avisar que está pronto</button>`:''}</div></div>`}).join('');}
+    function renderTrabalhos(){const el=document.getElementById('listaTrabalhos'),hoje=dataISO();const q=(document.getElementById('buscaTrabalho')?.value||'').toLowerCase();const a=[...DB.trabalhos].filter(t=>!q||[t.paciente,nomeCliente(t.clienteId),nomeServico(t)].join(' ').toLowerCase().includes(q)).sort((x,y)=>(x.entrega||'9999').localeCompare(y.entrega||'9999'));if(!a.length){el.innerHTML='<div class="empty-state"><div class="glyph">🦷</div><p>Nenhum trabalho cadastrado.<br>Use “Novo trabalho” para começar.</p></div>';return;}el.innerHTML=a.map(t=>{const atras=t.status!=='Entregue'&&t.entrega&&t.entrega<hoje;return `<div class="card" onclick="abrirEditarTrabalho('${t.id}')"><div class="info"><div class="nome">${escapeHtml(t.paciente||'Sem paciente')} · ${escapeHtml(nomeServico(t))}</div><div class="sub">${escapeHtml(nomeCliente(t.clienteId))} · Entrega ${t.entrega?formatarDataBR(t.entrega):'sem data'} · ${t.cor?'Cor '+escapeHtml(t.cor):''}</div><div style="margin-top:5px"><span class="status-pill ${atras?'status-atrasado':t.status==='Pronto'?'status-pronto':''}">${atras?'ATRASADO · ':''}${escapeHtml(t.status)}</span></div></div><div style="text-align:right"><div class="valor">${fmt(Number(t.valor||0))}</div><div style="font-size:10px;color:var(--slate);margin-top:2px">custo ${fmt(custoTrabalho(t))}</div>${t.status==='Pronto'?`<button class="wa-btn" onclick="event.stopPropagation();avisarWhats('${t.id}')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9.5 9.5 0 0 0-8.2 14.3L2.5 21.5l5.3-1.3A9.5 9.5 0 1 0 12 2Zm0 17.2a7.7 7.7 0 0 1-3.9-1.1l-.3-.2-3.1.8.8-3-.2-.3A7.7 7.7 0 1 1 12 19.2Zm4.2-5.8c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1-1.3-.6-2.2-1.4-3-2.6-.2-.3 0-.4.1-.6l.5-.6c.1-.2.1-.4 0-.5l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.8.8-1.1 1.8-.7 2.9.8 2.4 2.6 4.3 4.9 5.3.9.4 2 .7 2.9.5.9-.2 1.8-.9 2.1-1.7.2-.5.2-1 0-1.1-.2-.1-.6-.3-1-.4Z"/></svg> Avisar que está pronto</button>`:''}</div></div>`}).join('');}
     function formatarDataBR(d){if(!d)return'';const [a,m,di]=d.split('-');return `${di}/${m}/${a}`;}
     function abrirNovoTrabalho(){
       document.getElementById('tituloTrabalho').textContent='Novo trabalho';
@@ -3883,9 +3808,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       document.getElementById('trabOutrosCustos').value='0';
       trabalhoMateriais=[];
       renderTrabalhoMateriais();
-      document.getElementById('trabMateriaisDetalhes').open=false;
       document.getElementById('btnExcluirTrabalho').style.display='none';
-      renderFluxoTrabalho();
       atualizarResumoCustoTrabalho();
       abrirOverlay('ovTrabalho');
     }
@@ -3942,7 +3865,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       document.getElementById('trabValor').value=t.valor||'';
       document.getElementById('trabEntrada').value=t.entrada||'';
       document.getElementById('trabEntrega').value=t.entrega||'';
-      document.getElementById('trabStatus').value=t.status==='Finalização'?'Em produção':(t.status||'Recebido');
+      document.getElementById('trabStatus').value=t.status||'Recebido';
       document.getElementById('trabObs').value=t.obs||'';
       if(Array.isArray(t.materiaisUsados)){
         trabalhoMateriais=t.materiaisUsados.map(x=>({...x}));
@@ -3951,9 +3874,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
         copiarFichaParaTrabalho(t.produtoId||'');
       }
       renderTrabalhoMateriais();
-      document.getElementById('trabMateriaisDetalhes').open=trabalhoMateriais.length>0;
       document.getElementById('btnExcluirTrabalho').style.display='inline-flex';
-      renderFluxoTrabalho();
       atualizarResumoCustoTrabalho();
       abrirOverlay('ovTrabalho');
     }
@@ -3993,7 +3914,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       if(tel && !tel.startsWith('55')) tel='55'+tel;
       window.open(`https://wa.me/${tel}?text=${encodeURIComponent(msg)}`,'_blank');
     }
-    function renderAgenda(){const el=document.getElementById('listaAgenda'),a=[...DB.trabalhos].filter(t=>t.entrega&&t.status!=='Entregue').sort((x,y)=>x.entrega.localeCompare(y.entrega));if(!a.length){el.innerHTML='<div class="empty-state"><div class="glyph">📅</div><p>Nenhuma entrega agendada.</p></div>';return}let d='';el.innerHTML=a.map(t=>{let h='';if(t.entrega!==d){d=t.entrega;h=`<div class="agenda-dia">${formatarDataBR(d)}${d===dataISO()?' · HOJE':''}</div>`}return h+`<div class="card" onclick="abrirEditarTrabalho('${t.id}')"><div class="info"><div class="nome">${escapeHtml(t.paciente||nomeServico(t))}</div><div class="sub">${escapeHtml(nomeCliente(t.clienteId))} · ${escapeHtml(statusProducao(t))}</div></div></div>`}).join('');}
+    function renderAgenda(){const el=document.getElementById('listaAgenda'),a=[...DB.trabalhos].filter(t=>t.entrega&&t.status!=='Entregue').sort((x,y)=>x.entrega.localeCompare(y.entrega));if(!a.length){el.innerHTML='<div class="empty-state"><div class="glyph">📅</div><p>Nenhuma entrega agendada.</p></div>';return}let d='';el.innerHTML=a.map(t=>{let h='';if(t.entrega!==d){d=t.entrega;h=`<div class="agenda-dia">${formatarDataBR(d)}${d===dataISO()?' · HOJE':''}</div>`}return h+`<div class="card" onclick="abrirEditarTrabalho('${t.id}')"><div class="info"><div class="nome">${escapeHtml(t.paciente||nomeServico(t))}</div><div class="sub">${escapeHtml(nomeCliente(t.clienteId))} · ${escapeHtml(t.status)}</div></div></div>`}).join('');}
 
     function mesAnteriorISO() {
       const d = new Date();
@@ -4011,18 +3932,38 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
     // das cobranças mais antigas primeiro (FIFO), evitando misturar saldo total
     // do cliente com o valor pendente de uma cobrança específica.
     function cobrancasComSaldo() {
-      const resultado=[];
-      DB.clientes.forEach(c=>{
-        const lancs=DB.lancamentos.filter(l=>l.clienteId===c.id).map((l,idx)=>({...l,_idx:idx})).sort((a,b)=>String(a.data||'').localeCompare(String(b.data||''))||a._idx-b._idx);
-        const abertas=[];let credito=0;
-        lancs.forEach(l=>{
-          const valor=Number(l.valor||0);
-          if(valor>0.004){const abatido=Math.min(valor,credito);credito=r2(credito-abatido);const item={lancamento:l,cliente:c,restante:r2(valor-abatido)};abertas.push(item);resultado.push(item);return;}
-          if(valor>=-0.004)return;
-          credito=r2(credito+Math.abs(valor));
-          for(const cob of abertas){if(credito<=0.004)break;const abatido=Math.min(cob.restante,credito);cob.restante=r2(cob.restante-abatido);credito=r2(credito-abatido);}
+      const resultado = [];
+      DB.clientes.forEach(c => {
+        const lancs = DB.lancamentos
+          .filter(l => l.clienteId === c.id)
+          .map((l, idx) => ({...l, _idx: idx}))
+          .sort((a, b) => {
+            const da = String(a.data || ''), db = String(b.data || '');
+            return da === db ? a._idx - b._idx : da.localeCompare(db);
+          });
+
+        const abertas = [];
+        lancs.forEach(l => {
+          const valor = Number(l.valor || 0);
+          if (valor > 0.004) {
+            const item = {lancamento: l, cliente: c, restante: valor};
+            abertas.push(item);
+            resultado.push(item);
+            return;
+          }
+          if (valor >= -0.004) return;
+
+          let credito = Math.abs(valor);
+          for (const cob of abertas) {
+            if (credito <= 0.004) break;
+            if (cob.restante <= 0.004) continue;
+            const abatido = Math.min(cob.restante, credito);
+            cob.restante -= abatido;
+            credito -= abatido;
+          }
         });
-      });return resultado;
+      });
+      return resultado;
     }
 
     function preencherClientesRelatorio() {
@@ -4205,7 +4146,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
       }).join('');
     }
 
-    function renderRelatorios(){const el=document.getElementById('relatoriosConteudo'),fat=DB.trabalhos.filter(t=>t.status==='Entregue').reduce((s,t)=>s+Number(t.valor||0),0),cust=DB.trabalhos.filter(t=>t.status==='Entregue').reduce((s,t)=>s+custoTrabalho(t),0),compras=DB.materiaisMov.filter(x=>x.tipo==='entrada').reduce((s,x)=>s+Number(x.valorTotal||0),0);const porProd={};DB.trabalhos.forEach(t=>{const n=nomeServico(t);porProd[n]=(porProd[n]||0)+1});const max=Math.max(1,...Object.values(porProd));const barras=Object.entries(porProd).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([nome,n])=>`<div class="bar-row"><div class="bar-label"><span>${escapeHtml(nome)}</span><b>${n}</b></div><div class="bar-track"><div class="bar-fill" style="width:${n/max*100}%"></div></div></div>`).join('');el.innerHTML=`<div class="totals-box"><div class="row"><span>Valor dos trabalhos entregues</span><b>${fmt(fat)}</b></div><div class="row"><span>Custo</span><b>${fmt(cust)}</b></div><div class="row"><span>Gasto com materiais</span><b>${fmt(compras)}</b></div><div class="row final"><span>Resultado estimado dos entregues</span><b>${fmt(fat-cust)}</b></div></div><h3 class="section-title">Serviços mais feitos</h3>${barras||'<div class="empty-state"><p>Sem dados ainda.</p></div>'}`;}
+    function renderRelatorios(){const el=document.getElementById('relatoriosConteudo'),fat=DB.trabalhos.filter(t=>t.status==='Entregue').reduce((s,t)=>s+Number(t.valor||0),0),cust=DB.trabalhos.filter(t=>t.status==='Entregue').reduce((s,t)=>s+custoTrabalho(t),0),compras=DB.materiaisMov.filter(x=>x.tipo==='entrada').reduce((s,x)=>s+Number(x.valorTotal||0),0);const porProd={};DB.trabalhos.forEach(t=>{const n=nomeServico(t);porProd[n]=(porProd[n]||0)+1});const max=Math.max(1,...Object.values(porProd));const barras=Object.entries(porProd).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([nome,n])=>`<div class="bar-row"><div class="bar-label"><span>${escapeHtml(nome)}</span><b>${n}</b></div><div class="bar-track"><div class="bar-fill" style="width:${n/max*100}%"></div></div></div>`).join('');el.innerHTML=`<div class="totals-box"><div class="row"><span>Total recebido</span><b>${fmt(fat)}</b></div><div class="row"><span>Custo</span><b>${fmt(cust)}</b></div><div class="row"><span>Gasto com materiais</span><b>${fmt(compras)}</b></div><div class="row final"><span>Lucro</span><b>${fmt(fat-cust)}</b></div></div><h3 class="section-title">Serviços mais feitos</h3>${barras||'<div class="empty-state"><p>Sem dados ainda.</p></div>'}`;}
     function abrirFicha(pid){const p=DB.produtos.find(x=>x.id===pid);if(!p)return;document.getElementById('fichaProdutoId').value=pid;document.getElementById('fichaProdutoNome').textContent=p.nome;const f=DB.fichas[pid]||{materiais:[],outros:0};fichaLinhas=(f.materiais||[]).map(x=>({...x}));document.getElementById('fichaOutros').value=f.outros||0;renderFichaLinhas();abrirOverlay('ovFicha');}
     function addFichaLinha(){fichaLinhas.push({materialId:DB.materiais[0]?.id||'',qtd:1});renderFichaLinhas();}
     function renderFichaLinhas(){const el=document.getElementById('fichaMateriais');el.innerHTML=fichaLinhas.map((x,i)=>`<div class="avulso-row"><select onchange="fichaLinhas[${i}].materialId=this.value">${DB.materiais.map(m=>`<option value="${m.id}" ${m.id===x.materialId?'selected':''}>${escapeHtml(m.nome)} (${escapeHtml(m.unidade||'un')})</option>`).join('')}</select><input type="number" step="0.01" value="${x.qtd}" oninput="fichaLinhas[${i}].qtd=Number(this.value)"><button class="avulso-remove" onclick="fichaLinhas.splice(${i},1);renderFichaLinhas()">✕</button></div>`).join('')||'<div style="font-size:12px;color:var(--slate)">Adicione os materiais que normalmente são usados neste serviço.</div>';}
@@ -4358,7 +4299,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
  }
  window.v24NovoTrabalho=()=>{switchScreen('gestao');setTimeout(()=>window.abrirNovoTrabalho&&abrirNovoTrabalho(),80)};
  window.v24NovoCliente=()=>{switchScreen('clientes');setTimeout(()=>window.abrirNovoCliente&&abrirNovoCliente(),80)};
- window.v24Pagamento=()=>{switchScreen('conta');trocarFinanceiro('pagamento')};
+ window.v24Pagamento=()=>{switchScreen('financeiro');setTimeout(()=>window.abrirRegistrarPagamento&&abrirRegistrarPagamento(),80)};
  window.v24CompraMaterial=()=>{switchScreen('materiais');setTimeout(()=>window.abrirMovMaterial&&abrirMovMaterial('entrada'),80)};
  window.toggleFabv24=()=>document.getElementById('fabv24')?.classList.toggle('open');
  window.openHelpv24=()=>document.getElementById('helpv24')?.classList.add('show');
@@ -4370,15 +4311,15 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
   q.innerHTML=`
    <button class="quick-action-v24" onclick="v24NovoTrabalho()">${svg.work}<span><strong>Novo trabalho</strong><small>Paciente, serviço e entrega</small></span></button>
    <button class="quick-action-v24" onclick="v24NovoCliente()">${svg.user}<span><strong>Novo cliente</strong><small>Cadastre um dentista ou cliente</small></span></button>
-   <button class="quick-action-v24" onclick="v24Pagamento()">${svg.pay}<span><strong>Registrar valor recebido</strong><small>Marque o que foi recebido</small></span></button>`;
+   <button class="quick-action-v24" onclick="v24Pagamento()">${svg.pay}<span><strong>Registrar pagamento</strong><small>Marque o que foi recebido</small></span></button>`;
   const first=host.querySelector('.dashboard-grid,.home-grid,.cards-grid,.card');
-  const head=host.querySelector('.home-head');if(head)head.after(q);else host.prepend(q);
+  if(first)host.insertBefore(q,first);else host.prepend(q);
  }
  function contextual(){
   const defs=[
-   ['screen-produtos','Serviços são opcionais. Salve aqui apenas os que você usa com frequência; no trabalho você também pode digitar um serviço novo na hora.'],
+   ['screen-servicos','Serviços são opcionais. Salve aqui apenas os que você usa com frequência; no trabalho você também pode digitar um serviço novo na hora.'],
    ['screen-materiais','Use esta tela para controlar o que você compra e o que ainda tem em estoque.'],
-   ['screen-conta','Aqui você acompanha quem precisa pagar e registra os pagamentos recebidos.'],
+   ['screen-financeiro','Aqui você acompanha quem precisa pagar e registra os pagamentos recebidos.'],
    ['screen-gestao','Comece por “Novo trabalho”. Depois acompanhe o andamento até marcar como entregue.']
   ];
   defs.forEach(([id,msg])=>{const h=document.getElementById(id);if(!h||h.querySelector('.context-help-v24'))return;const d=document.createElement('div');d.className='context-help-v24';d.textContent=msg;const title=h.querySelector('h1,h2');title?.after(d)});
@@ -4389,7 +4330,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
   d.innerHTML=`<div class="fab-options-v24">
    <button class="fab-option-v24" onclick="v24NovoTrabalho();toggleFabv24()">Novo trabalho</button>
    <button class="fab-option-v24" onclick="v24NovoCliente();toggleFabv24()">Novo cliente</button>
-   <button class="fab-option-v24" onclick="v24Pagamento();toggleFabv24()">Registrar valor recebido</button>
+   <button class="fab-option-v24" onclick="v24Pagamento();toggleFabv24()">Registrar pagamento</button>
    <button class="fab-option-v24" onclick="v24CompraMaterial();toggleFabv24()">Comprei material</button>
   </div><button class="fab-main-v24" onclick="toggleFabv24()" aria-label="Ações rápidas">+</button>`;
   document.body.appendChild(d);
@@ -4403,7 +4344,7 @@ button.home-alert{font:inherit;text-align:left;border:1px solid var(--line);curs
    <div class="help-item-v24"><strong>Cliente novo</strong><small>Toque em + → Novo cliente e salve os dados principais.</small></div>
    <div class="help-item-v24"><strong>Comprei material</strong><small>Vá em Materiais e registre uma entrada para aumentar o estoque e atualizar o custo.</small></div>
    <div class="help-item-v24"><strong>Entreguei o trabalho</strong><small>Abra o trabalho e marque como Entregue. Os materiais informados podem ser baixados do estoque.</small></div>
-   <div class="help-item-v24"><strong>Recebi pagamento</strong><small>Vá em Financeiro ou use + → Registrar valor recebido.</small></div>
+   <div class="help-item-v24"><strong>Recebi pagamento</strong><small>Vá em Financeiro ou use + → Registrar pagamento.</small></div>
    <div class="help-item-v24"><strong>Preciso recuperar dados</strong><small>Em Ajustes, use os backups automáticos recentes ou faça um backup na hora.</small></div>
   </div></div>`;
   document.body.appendChild(m);
