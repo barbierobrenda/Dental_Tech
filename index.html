@@ -182,6 +182,26 @@
       white-space: nowrap;
     }
 
+    .btn-del-pag {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      height: 32px;
+      padding: 0 8px;
+      background: transparent;
+      border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+      color: var(--slate);
+      transition: background .15s, color .15s;
+    }
+    .btn-del-pag span { display: block; font: 600 11px/1 Arial, sans-serif; white-space: nowrap; }
+    .btn-del-pag:hover, .btn-del-pag:active { background: var(--paper-2); color: var(--text); }
+    .btn-del-pag.del { color: var(--rust); }
+    .btn-del-pag.del:hover, .btn-del-pag.del:active { background: rgba(214, 69, 59, .1); }
+
     .card .valor {
       font-family: var(--mono);
       font-size: 16px;
@@ -2250,12 +2270,12 @@ tbody td{
   <div class="overlay" id="ovPagamento">
     <div class="sheet">
       <button class="sheet-close" onclick="fecharOverlay('ovPagamento')">✕</button>
-      <div class="sheet-title">Registrar pagamento</div>
+      <div class="sheet-title" id="pagTitulo">Registrar pagamento</div>
       <div style="color:var(--slate); font-size:13px; margin-bottom:6px;" id="pagCliente"></div>
       <label>Valor pago (R$)</label>
       <input type="number" id="pagValor" placeholder="0,00" inputmode="decimal" step="0.01"><label>Forma de pagamento</label><select id="pagMetodo"><option>Pix</option><option>Dinheiro</option><option>Cartão</option><option>Transferência</option><option>Outro</option></select>
       <div class="btn-row">
-        <button class="btn btn-sage" onclick="confirmarPagamento()">Confirmar pagamento</button>
+        <button class="btn btn-sage" id="pagBtnOk" onclick="confirmarPagamento()">Confirmar pagamento</button>
       </div>
     </div>
   </div>
@@ -2888,6 +2908,8 @@ tbody td{
           <div class="sub">${l.dataFormatada}${ehConta ? ' · toque para ver a nota' : ''}</div>
         </div>
         <div class="valor ${cor}" style="font-size:14px;">${sinal}${fmt(l.valor)}</div>
+        ${l.valor < 0 ? `<button class="btn-del-pag" onclick="event.stopPropagation();editarPagamento('${l.id}')" aria-label="Editar" title="Editar"><span>Editar</span></button>` : ''}
+        <button class="btn-del-pag del" onclick="event.stopPropagation();excluirPagamento('${l.id}')" aria-label="Excluir" title="Excluir"><span>Apagar</span></button>
       </div>`;
         }).join('');
       }
@@ -3204,7 +3226,11 @@ tbody td{
     }
 
     /* ==================== PAGAMENTO ==================== */
+    let pagEditandoId = null;
     function abrirRegistrarPagamento() {
+      pagEditandoId = null;
+      document.getElementById('pagTitulo').textContent = 'Registrar pagamento';
+      document.getElementById('pagBtnOk').textContent = 'Confirmar pagamento';
       const clienteId = document.getElementById('selCliente').value;
       if (!clienteId) {avisoApp('Selecione um cliente.'); return;}
       const c = DB.clientes.find(x => x.id === clienteId);
@@ -3213,9 +3239,25 @@ tbody td{
       abrirOverlay('ovPagamento');
     }
     function confirmarPagamento() {
-      const clienteId = document.getElementById('selCliente').value;
       const valor = parseFloat(document.getElementById('pagValor').value);
       if (isNaN(valor) || valor <= 0) {avisoApp('Digite um valor de pagamento válido.'); return;}
+      if (pagEditandoId) {
+        const l = DB.lancamentos.find(x => x.id === pagEditandoId);
+        if (l) {
+          l.valor = -r2(valor);
+          l.metodo = document.getElementById('pagMetodo').value;
+          salvar();
+        }
+        pagEditandoId = null;
+        fecharOverlay('ovPagamento');
+        if (document.getElementById('ovDetalheCliente').classList.contains('show') && clienteDetalheAtualId) abrirDetalheCliente(clienteDetalheAtualId);
+        renderPagamentos();
+        renderClientes();
+        if (typeof renderInicio === 'function') renderInicio();
+        atualizarTotaisConta();
+        return;
+      }
+      const clienteId = document.getElementById('selCliente').value;
       DB.lancamentos.push({
         id: uid(), clienteId, data: new Date().toISOString(), dataFormatada: hojeStr(),
         descricao: 'Pagamento recebido', metodo: document.getElementById('pagMetodo').value, valor: -r2(valor)
@@ -3368,8 +3410,41 @@ tbody td{
         <div class="sub">${l.dataFormatada}${l.metodo ? ' · '+escapeHtml(l.metodo) : ''}</div>
       </div>
       <div class="valor quitado">${fmt(Math.abs(l.valor))}</div>
+      <button class="btn-del-pag" onclick="editarPagamento('${l.id}')" aria-label="Editar pagamento" title="Editar pagamento"><span>Editar</span></button>
+      <button class="btn-del-pag del" onclick="excluirPagamento('${l.id}')" aria-label="Excluir pagamento" title="Excluir pagamento"><span>Apagar</span></button>
     </div>`;
       }).join('');
+    }
+    function editarPagamento(id) {
+      const l = DB.lancamentos.find(x => x.id === id && x.valor < 0);
+      if (!l) return;
+      const c = DB.clientes.find(x => x.id === l.clienteId);
+      pagEditandoId = id;
+      document.getElementById('pagTitulo').textContent = 'Editar pagamento';
+      document.getElementById('pagBtnOk').textContent = 'Salvar alterações';
+      document.getElementById('pagCliente').textContent = (c ? c.nome : 'Cliente removido') + ' — ' + l.dataFormatada;
+      document.getElementById('pagValor').value = Math.abs(l.valor);
+      const sel = document.getElementById('pagMetodo');
+      sel.value = l.metodo || 'Outro';
+      abrirOverlay('ovPagamento');
+    }
+    async function excluirPagamento(id) {
+      const l = DB.lancamentos.find(x => x.id === id);
+      if (!l) return;
+      const c = DB.clientes.find(x => x.id === l.clienteId);
+      const ehPag = l.valor < 0;
+      const msg = ehPag
+        ? `Excluir o pagamento de ${fmt(Math.abs(l.valor))}${c ? ' de ' + c.nome : ''} (${l.dataFormatada})? O valor volta para o débito do cliente.`
+        : `Excluir "${l.descricao}" de ${fmt(l.valor)}${c ? ' de ' + c.nome : ''} (${l.dataFormatada})? O valor sai do débito do cliente.`;
+      if (!(await confirmarApp(msg, ehPag ? 'Excluir pagamento?' : 'Excluir lançamento?'))) return;
+      DB.lancamentos = DB.lancamentos.filter(x => x.id !== id);
+      salvar();
+      renderPagamentos();
+      renderNotas();
+      if (document.getElementById('ovDetalheCliente').classList.contains('show') && clienteDetalheAtualId) abrirDetalheCliente(clienteDetalheAtualId);
+      renderClientes();
+      if (typeof renderInicio === 'function') renderInicio();
+      if (typeof atualizarTotaisConta === 'function') atualizarTotaisConta();
     }
     function abrirNotaHistorico(lancId) {
       const lanc = DB.lancamentos.find(l => l.id === lancId);
